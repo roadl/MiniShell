@@ -9,7 +9,8 @@ int	exec_built_in(char *line, char **cmd, char **envp);
 int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
-	const char	*test[] = { "libft", "asdf wqer", NULL };
+	const char	*test[] = { "-", "asdf wqer", NULL };
+	char		**strs;
 
 	if (argc != 1)
 		exit(EXIT_FAILURE);
@@ -27,7 +28,8 @@ int	main(int argc, char **argv, char **envp)
 			printf("line nothing\n");
 			continue ;
 		}
-		exec_built_in(line, test, envp);
+		strs = ft_split(line, ' ');
+		exec_built_in(strs[0], strs, envp);
 		// set_signal_ignore?
 		// 파싱
 		add_history(line);
