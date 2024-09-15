@@ -11,6 +11,12 @@
 #include <fcntl.h>
 #include "libft/libft.h"
 
+typedef struct s_arg {
+	char	**envp;
+	int		exit_code;
+	t_list	*cmd_list;
+}	t_arg;
+
 // built_in.c
 int	ft_echo(char **arg, char **envp, int option);
 int	ft_cd(char **cmd, char **envp);

@@ -58,4 +58,5 @@ int	exec_built_in(char *line, char **cmd, char **envp)
 		res = ft_env(cmd, envp);
 	if (ft_strncmp(line, "exit", 5) == 0)
 		res = ft_exit(cmd, envp);
+	return (res);
 }
