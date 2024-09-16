@@ -5,12 +5,12 @@
 
 // option -n 들어올 수 있음
 // $?에 대한 처리 어떻게 할지 생각해야 함
-int	ft_echo(char **arg, char **envp, int option)
+int	ft_echo(char **cmd, t_arg *arg, int option)
 {
-	while (*arg)
+	while (*cmd)
 	{
-		printf("%s", *arg);
-		arg++;
+		printf("%s", *cmd);
+		cmd++;
 	}
 	if (option)
 		printf("\n");
@@ -23,7 +23,7 @@ int	ft_echo(char **arg, char **envp, int option)
 // - or ~면 getenv로 가져와서 path로 chdir
 // 아니면 그냥 들어온거로 chdir
 // 바꾸면 이전거 OLDPWD, 다음거 PWD로 보내야 함
-int	ft_cd(char **cmd, char **envp)
+int	ft_cd(char **cmd, t_arg *arg)
 {
 	char	*cur;
 	char	*path;
@@ -49,14 +49,14 @@ int	ft_cd(char **cmd, char **envp)
 }
 
 // 현재 디렉터리 주소 출력
-int	ft_pwd(char **cmd, char **envp)
+int	ft_pwd(char **cmd, t_arg *arg)
 {
 	char	*cur;
 
 	cur = getcwd(NULL, 0);
 	if (!cur)
 	{
-		perror(0);
+		perror("pwd: ");
 		return (-1);
 	}
 	printf("%s\n", cur);
@@ -64,43 +64,63 @@ int	ft_pwd(char **cmd, char **envp)
 	return (0);
 }
 
+// 인자 안 들어오면 처리
 // envp에서 가져와서
-int	ft_export(char **cmd, char **envp)
+int	ft_export(char **cmd, t_arg *arg)
 {
 	char	*key;
 	char	*value;
+	int		i;
 	
 	if (!cmd[1])
 		return (0);
-	while (envp)
+	i = 0;
+	while (arg->envp[i])
 	{
-		if (ft_strncmp(cmd[1], *envp, ft_strlen(cmd[1])) == 0)
+		if (ft_strncmp(cmd[1], arg->envp[i], ft_strlen(cmd[1])) == 0)
 			break;
-		envp++;
+		i++;
 	}
 }
 
-int	ft_unset(char **cmd, char **envp)
+// option에 대해서 처리해야함
+// exit_code 맞춰야 함
+int	ft_unset(char **cmd, t_arg *arg)
 {
+	int	i;
 
+	if (!cmd[1])
+		return (0);
+	i = 1;
+	while (cmd[i])
+	{
+		if (i == 1 && cmd[i][0] == '-')
+		{
+			print_error("unset", cmd[i], "invalid option", invalid_option);
+			return (0);
+		}
+		unset_env(cmd[i], arg);
+		i++;
+	}
 }
 
 // 입력 인자 없어야 함
 // = 이 있을때만 출력해야 함
-int	ft_env(char **cmd, char **envp)
+int	ft_env(char **cmd, t_arg *arg)
 {
+	int	i;
+
 	if (cmd[1])
 	{
-		ft_putstr_fd("env: ", STDERR_FILENO);
-		ft_putstr_fd(cmd[1], STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		print_error("env", cmd[1], strerror(ENOENT), error_built_in);
 		return (-1);
 	}
-	while (*envp)
+	i = 0;
+	while (arg->envp[i])
 	{
-		if (ft_strchr(*envp, '='))
-			printf("%s\n", *envp);
-		envp++;
+		if (ft_strchr(arg->envp[i], '='))
+			printf("%s\n", arg->envp[i]);
+		i++;
 	}
 }
 
@@ -111,7 +131,7 @@ int	ft_env(char **cmd, char **envp)
 // single command일때 exit 출력 후 종료
 // 음수일땐 256을 뺀 값
 // 숫자가 long long 넘어가면 에러메세지
-int	ft_exit(char **cmd, char **envp)
+int	ft_exit(char **cmd, t_arg *arg)
 {
 	int	exit_code;
 

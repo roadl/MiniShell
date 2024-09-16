@@ -1,18 +1,39 @@
-
 #include "minishell.h"
 
-int	exec_built_in(char *line, char **cmd, char **envp);
+int	exec_built_in(char *line, char **cmd, t_arg *arg)
+{
+	int	res;
+
+	res = 0;
+	printf("line: %s\n", line);
+	if (ft_strncmp(line, "echo", 5) == 0)
+		res = ft_echo(cmd, arg, 1);
+	if (ft_strncmp(line, "cd", 3) == 0)
+		res = ft_cd(cmd, arg);
+	if (ft_strncmp(line, "pwd", 4) == 0)
+		res = ft_pwd(cmd, arg);
+	if (ft_strncmp(line, "export", 7) == 0)
+		res = ft_export(cmd, arg);
+	if (ft_strncmp(line, "unset", 6) == 0)
+		res = ft_unset(cmd, arg);
+	if (ft_strncmp(line, "env", 4) == 0)
+		res = ft_env(cmd, arg);
+	if (ft_strncmp(line, "exit", 5) == 0)
+		res = ft_exit(cmd, arg);
+	return (res);
+}
 
 // ctrl-C -> new lline
 // ctrl-D -> exit
 // ctrl-\ -> does nothing
+// 들어올때 SHLVL 하나 증가시켜야 함
 int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
-	const char	*test[] = { "-", "asdf wqer", NULL };
 	char		**strs;
+	t_arg		arg;
 
-	if (argc != 1)
+	if (argc != 1 || !init_arg(&arg, envp))
 		exit(EXIT_FAILURE);
 	while (1)
 	{
@@ -29,7 +50,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		strs = ft_split(line, ' ');
-		exec_built_in(strs[0], strs, envp);
+		exec_built_in(strs[0], strs, &arg);
 		// set_signal_ignore?
 		// 파싱
 		add_history(line);
@@ -37,26 +58,4 @@ int	main(int argc, char **argv, char **envp)
 		// 실행
 		// free, unlink
 	}
-}
-
-int	exec_built_in(char *line, char **cmd, char **envp)
-{
-	int	res;
-
-	res = 0;
-	if (ft_strncmp(line, "echo", 5) == 0)
-		res = ft_echo(cmd, envp, 1);
-	if (ft_strncmp(line, "cd", 3) == 0)
-		res = ft_cd(cmd, envp);
-	if (ft_strncmp(line, "pwd", 4) == 0)
-		res = ft_pwd(cmd, envp);
-	if (ft_strncmp(line, "export", 7) == 0)
-		res = ft_export(cmd, envp);
-	if (ft_strncmp(line, "unset", 6) == 0)
-		res = ft_unset(cmd, envp);
-	if (ft_strncmp(line, "env", 4) == 0)
-		res = ft_env(cmd, envp);
-	if (ft_strncmp(line, "exit", 5) == 0)
-		res = ft_exit(cmd, envp);
-	return (res);
 }
