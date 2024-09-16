@@ -29,7 +29,6 @@ t_list	*find_env(const char *key, t_arg *arg)
 	while (node)
 	{
 		content = node->content;
-		printf("%s\n", content);
 		if (ft_strncmp(key, content, ft_strlen(key)) == 0 \
 			&& content[ft_strlen(key)] == '=')
 			return (node);
@@ -50,7 +49,7 @@ int	update_env(const char *key, const char *value, t_arg *arg)
 		print_error("export", "key", "not a valid identifier", invalid_identifier);
 		return (-1);
 	}
-	node = find_env(key, arg->envp);
+	node = find_env(key, arg);
 	if (!node)
 	{
 		// 새로 노드 만들어서 붙여주기 or 비어있는 노드 찾아서 거따 넣어주기
@@ -76,12 +75,10 @@ int	unset_env(const char *key, t_arg *arg)
 		print_error("unset", key, "not a valid identifier", invalid_identifier);
 		return (-1);
 	}
-	node = find_env(key, arg->envp);
-	printf("find!: %s\n", node->content);
+	node = find_env(key, arg);
 	if (!node)
 		return (0);
 	free(node->content);
-	printf("free\n");
 	node->content = ft_strdup("");
 	if (!node->content)
 		print_error(NULL, NULL, NULL, error_systemcall);

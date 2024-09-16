@@ -27,13 +27,14 @@ int	env_list_to_envp(t_arg *arg)
 	i = 0;
 	if (arg->envp)
 		while (arg->envp[i])
-			free(arg->envp[i]);
+			free(arg->envp[i++]);
 	free(arg->envp);
 	size = ft_lstsize(arg->env_list);
 	arg->envp = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!arg->envp)
 		print_error(NULL, NULL, NULL, error_systemcall);
 	node = arg->env_list;
+	i = 0;
 	while (node)
 	{
 		arg->envp[i] = ft_strdup(node->content);
@@ -42,6 +43,7 @@ int	env_list_to_envp(t_arg *arg)
 		node = node->next;
 		i++;
 	}
+	arg->envp[i] = NULL;
 	return (1);
 }
 

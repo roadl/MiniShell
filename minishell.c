@@ -49,6 +49,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("line nothing\n");
 			continue ;
 		}
+		//print_envp(arg.envp);
 		strs = ft_split(line, ' ');
 		exec_built_in(strs[0], strs, &arg);
 		// set_signal_ignore?

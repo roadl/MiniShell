@@ -62,4 +62,8 @@ int	print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 int	init_arg(t_arg *arg, char **envp);
 int	env_list_to_envp(t_arg *arg);
 
+// debug.c
+void	print_list(t_list *lst);
+void	print_envp(char **envp);
+
 #endif
