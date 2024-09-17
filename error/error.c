@@ -54,8 +54,7 @@ static int	print_exec_error(char *cmd, char *arg, char *msg, t_error_type err_ty
 }
 
 // 에러 났을때 STDERR_FILENO에 메세지 출력
-// cmd: (arg: ) (msg or perror) 형식으로 출력
-// arg 비어있으면 
+// cmd: (arg: ) msg 형식으로 출력
 int	print_error(char *cmd, char *arg, char *msg, t_error_type err_type)
 {
 	ft_putstr_fd("fastshell: ", STDERR_FILENO);
