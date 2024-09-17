@@ -38,7 +38,7 @@ int	ft_env(char **cmd, t_arg *arg);
 int	ft_exit(char **cmd, t_arg *arg);
 
 // env.c
-int		update_env(const char *key, const char *value, t_arg *arg);
+int		update_env(const char *key, t_arg *arg);
 int		unset_env(const char *key, t_arg *arg);
 t_list	*find_env(const char *key, t_arg *arg);
 

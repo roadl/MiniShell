@@ -23,20 +23,27 @@ int	ft_echo(char **cmd, t_arg *arg, int option)
 // - or ~면 getenv로 가져와서 path로 chdir
 // 아니면 그냥 들어온거로 chdir
 // 바꾸면 이전거 OLDPWD, 다음거 PWD로 보내야 함
+// 구조 바꿔야 함 함수 하나 만들어서 path 받아오고
+// pwd를 OLDPWD로, chdir하고 PWD 업데이트 하고 free(path)하는 식으로
 int	ft_cd(char **cmd, t_arg *arg)
 {
 	char	*cur;
 	char	*path;
+	t_list	*node;
 
 	path = 0;
 	if (!cmd[1])
 		return (0);
 	if (ft_strncmp(cmd[1], "-", 2) == 0)
-		path = getenv("OLDPWD");
+	{
+		node = find_env("OLDPWD", arg);
+		if (!node)
+			return (print_error("cd", NULL, "OLDPWD not set", error_built_in));
+		path = node->content;
+	}
 	else if (ft_strncmp(cmd[1], "~", 2) == 0)
 	{
 		path = getenv("HOME");
-		printf("%s\n", path);
 	}
 	else
 		return (chdir(cmd[1]));
@@ -64,21 +71,29 @@ int	ft_pwd(char **cmd, t_arg *arg)
 	return (0);
 }
 
-// 인자 안 들어오면 처리
-// envp에서 가져와서
+// 인자 없을때 아스키코드순으로 출력해야 함. 어떻게?
 int	ft_export(char **cmd, t_arg *arg)
 {
 	char	*key;
 	char	*value;
 	int		i;
-	
+
 	if (!cmd[1])
 		return (0);
-	i = 0;
-	while (arg->envp[i])
+	i = 1;
+	while (cmd[i])
 	{
-		if (ft_strncmp(cmd[1], arg->envp[i], ft_strlen(cmd[1])) == 0)
-			break;
+		if (ft_strncmp(cmd[i], "_", 2) == 0)
+		{
+			i++;
+			continue ;
+		}
+		if (i == 1 && cmd[i][0] == '-')
+		{
+			print_error("export", cmd[i], "invalid option", invalid_option);
+			return (0);
+		}
+		update_env(cmd[i], arg);
 		i++;
 	}
 }
@@ -96,6 +111,7 @@ int	ft_unset(char **cmd, t_arg *arg)
 	{
 		if (i == 1 && cmd[i][0] == '-')
 		{
+			printf("asdf\n");
 			print_error("unset", cmd[i], "invalid option", invalid_option);
 			return (0);
 		}

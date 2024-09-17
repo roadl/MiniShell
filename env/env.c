@@ -1,6 +1,11 @@
 #include "minishell.h"
 
-static int	is_valid_key(const char *key)
+typedef enum e_key_type {
+	EXPORT,
+	UNSET
+}	t_key_type;
+
+static int	is_valid_key(const char *key, t_key_type type)
 {
 	int	i;
 
@@ -11,11 +16,40 @@ static int	is_valid_key(const char *key)
 	i = 1;
 	while (key[i])
 	{
+		if (key[i] == '=' && type == EXPORT)
+			return (1);
 		if (!ft_isalnum(key[i]) && key[i] != '_')
 			return (0);
 		i++;
 	}
 	return (1);
+}
+
+static char	*ft_strjoin_c(char const *s1, char const *s2, char c)
+{
+	char	*str;
+	size_t	s_len;
+	size_t	i;
+
+	s_len = ft_strlen(s1);
+	str = malloc((s_len + ft_strlen(s2) + 2) * sizeof(char));
+	if (!str)
+		return (0);
+	i = 0;
+	while (*(s1 + i))
+	{
+		*(str + i) = *(s1 + i);
+		i++;
+	}
+	str[i] = 'c';
+	i = 0;
+	while (*(s2 + i))
+	{
+		*(str + s_len + i + 1) = *(s2 + i);
+		i++;
+	}
+	*(str + s_len + i + 1) = '\0';
+	return (str);
 }
 
 /// @brief find env, key값으로 env 돌면서 찾아서 그 문자열 주소 리턴, 없으면 null
@@ -40,37 +74,34 @@ t_list	*find_env(const char *key, t_arg *arg)
 /// @brief update env, 있으면 덮어쓰기, 없으면 만들어서 넣기
 /// @return success 0, fail -1
 // key value가 아니라 문자열로 들어온거 = 기준으로 잘라서 앞에꺼 key로 써야 할듯
-int	update_env(const char *key, const char *value, t_arg *arg)
+int	update_env(const char *key, t_arg *arg)
 {
 	t_list	*node;
 
-	if (!is_valid_key(key))
+	if (!is_valid_key(key, EXPORT))
 	{
-		print_error("export", "key", "not a valid identifier", invalid_identifier);
+		print_error("export", key, "not a valid identifier", \
+			invalid_identifier);
 		return (-1);
 	}
 	node = find_env(key, arg);
 	if (!node)
 	{
-		// 새로 노드 만들어서 붙여주기 or 비어있는 노드 찾아서 거따 넣어주기
+		node = ft_lstnew(ft_strdup(key));
+		ft_lstadd_back(&arg->env_list, node);
 	}
-	// 원래 있던거 할당 해제하고 새로 만들어서 넣어주기
-	// free(*str);
-	// *str = ft_strdup("");
-	// if (!str)
-	// 	return (-1);
+	node->content = ft_strdup(key);
+	if (!node || !node->content)
+		print_error(NULL, NULL, NULL, error_systemcall);
+	printf("Export success!\n");
+	return (env_list_to_envp(arg));
 }
 
 int	unset_env(const char *key, t_arg *arg)
 {
 	t_list	*node;
 
-	if (key[0] == '-')
-	{
-		print_error("unset", key, "invalid option", invalid_option);
-		return (-1);
-	}
-	if (!is_valid_key(key))
+	if (!is_valid_key(key, UNSET))
 	{
 		print_error("unset", key, "not a valid identifier", invalid_identifier);
 		return (-1);
