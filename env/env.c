@@ -63,6 +63,7 @@ t_list	*find_env(const char *key, t_arg *arg)
 	while (node)
 	{
 		content = node->content;
+		printf("find_env, content: %s\n", content);
 		if (ft_strncmp(key, content, ft_strlen(key)) == 0 \
 			&& content[ft_strlen(key)] == '=')
 			return (node);
@@ -74,26 +75,30 @@ t_list	*find_env(const char *key, t_arg *arg)
 /// @brief update env, 있으면 덮어쓰기, 없으면 만들어서 넣기
 /// @return success 0, fail -1
 // key value가 아니라 문자열로 들어온거 = 기준으로 잘라서 앞에꺼 key로 써야 할듯
-int	update_env(const char *key, t_arg *arg)
+int	update_env(const char *str, t_arg *arg)
 {
 	t_list	*node;
+	char	*key;
 
-	if (!is_valid_key(key, EXPORT))
+	if (!is_valid_key(str, EXPORT))
 	{
-		print_error("export", key, "not a valid identifier", \
+		print_error("export", str, "not a valid identifier", \
 			invalid_identifier);
 		return (-1);
 	}
+	key = ft_substr(str, 0, ft_strchr(str, '=') - str);
+	if (!key)
+		print_error(NULL, NULL, NULL, error_systemcall);
 	node = find_env(key, arg);
 	if (!node)
 	{
-		node = ft_lstnew(ft_strdup(key));
+		node = ft_lstnew(ft_strdup(str));
 		ft_lstadd_back(&arg->env_list, node);
 	}
-	node->content = ft_strdup(key);
+	node->content = ft_strdup(str);
 	if (!node || !node->content)
 		print_error(NULL, NULL, NULL, error_systemcall);
-	printf("Export success!\n");
+	free(key);
 	return (env_list_to_envp(arg));
 }
 
