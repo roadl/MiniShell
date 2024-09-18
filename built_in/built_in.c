@@ -52,6 +52,7 @@ static char	*get_path(char *find, t_arg *arg)
 // $?에 대한 처리 어떻게 할지 생각해야 함
 int	ft_echo(char **cmd, t_arg *arg, int option)
 {
+	cmd++;
 	while (*cmd)
 	{
 		printf("%s", *cmd);

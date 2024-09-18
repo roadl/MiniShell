@@ -63,7 +63,6 @@ t_list	*find_env(const char *key, t_arg *arg)
 	while (node)
 	{
 		content = node->content;
-		printf("find_env, content: %s\n", content);
 		if (ft_strncmp(key, content, ft_strlen(key)) == 0 \
 			&& content[ft_strlen(key)] == '=')
 			return (node);
