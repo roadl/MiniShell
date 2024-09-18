@@ -3,6 +3,19 @@
 // built_in 함수 전체 함수 하나로 처리해야할듯
 // 리턴값 보고 에러시 exit? 어떻게 해야 하지
 
+static char	*trans_path(char *path)
+{
+	char	*temp;
+	int		i;
+
+	if (path[ft_strlen(path)] == '/')
+		temp = ft_strdup(path);
+	else
+		temp = ft_strjoin(path, "/");
+	if (!temp)
+		print_error(NULL, NULL, NULL, error_systemcall);
+}
+
 // cd에서 들어온 첫번째 문자열 받아서 이동할 최종 path 리턴
 // ~, -, ., .. 처리해야 함
 // ., ..은 ./, ../일때 앞의 경로를 적당히 따서 바꿔주면 될듯
@@ -17,20 +30,22 @@ static char	*get_path(char *find, t_arg *arg)
 		node = find_env("HOME", arg);
 		if (!node)
 		{
-			ft_putstr_fd("bash: cd: HOME not set", STDERR_FILENO);
+			print_error("cd", NULL, "HOME not set", error_built_in);
 			return (0);
 		}
+		return(ft_substr(node->content, 5, ft_strlen(node->content)));
 	}
-	if (ft_strncmp(find, "-", 2) == 0)
+	else if (ft_strncmp(find, "-", 2) == 0)
 	{
 		node = find_env("OLDPWD", arg);
 		if (!node)
 		{
-			ft_putstr_fd("bash: cd: OLDPWD not set", STDERR_FILENO);
+			print_error("cd", NULL, "OLDPWD not set", error_built_in);
 			return (0);
 		}
-		printf("%s\n", node->content);
+		return(ft_substr(node->content, 7, ft_strlen(node->content)));
 	}
+	return (ft_strdup(find));
 }
 
 // option -n 들어올 수 있음
@@ -61,27 +76,20 @@ int	ft_cd(char **cmd, t_arg *arg)
 	char	*path;
 	t_list	*node;
 
-	path = 0;
-	if (!cmd[1])
-		return (0);
-	if (ft_strncmp(cmd[1], "-", 2) == 0)
-	{
-		node = find_env("OLDPWD", arg);
-		if (!node)
-			return (print_error("cd", NULL, "OLDPWD not set", error_built_in));
-		path = node->content;
-	}
-	else if (ft_strncmp(cmd[1], "~", 2) == 0)
-	{
-		path = getenv("HOME");
-	}
-	else
-		return (chdir(cmd[1]));
-	if (!path || chdir(path) == -1)
-	{
-		free(path);
-		return (-1);
-	}
+	path = get_path(cmd[1], arg);
+	if (!path)
+		print_error(NULL, NULL, NULL, error_systemcall);
+	cur = getcwd(NULL, 0);
+	if (!cur)
+		print_error(NULL, NULL, NULL, error_systemcall);
+	if (chdir(path) == -1)
+		return (print_error("cd", path, "No such file or directory", error_built_in));
+	free(path);
+	update_env(ft_strjoin("OLDPWD=", cur), arg);
+	cur = getcwd(NULL, 0);
+	if (!cur)
+		print_error(NULL, NULL, NULL, error_systemcall);
+	update_env(ft_strjoin("PWD=", cur), arg);
 	return (0);
 }
 

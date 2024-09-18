@@ -18,11 +18,12 @@ static int	print_bi_error(char *cmd, char *arg, char *msg, t_error_type err_type
 		ft_putstr_fd("`", STDERR_FILENO);
 	if (err_type == invalid_option)
 		ft_putnstr_fd(arg, 2, STDERR_FILENO);
-	else
+	else if (arg)
 		ft_putstr_fd(arg, STDERR_FILENO);
 	if (err_type == invalid_identifier)
 		ft_putstr_fd("'", STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
+	if (arg)
+		ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
 	if (err_type == invalid_identifier)

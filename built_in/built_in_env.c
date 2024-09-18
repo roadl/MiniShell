@@ -1,6 +1,7 @@
 #include "minishell.h"
 
 // 인자 없을때 아스키코드순으로 출력해야 함. 어떻게?
+// 있어도 바뀌는게 아니라 추가만 된다.
 int	ft_export(char **cmd, t_arg *arg)
 {
 	char	*key;
