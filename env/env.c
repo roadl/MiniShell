@@ -78,6 +78,7 @@ int	update_env(const char *str, t_arg *arg)
 {
 	t_list	*node;
 	char	*key;
+	char	*content;
 
 	if (!is_valid_key(str, EXPORT))
 	{

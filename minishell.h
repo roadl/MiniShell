@@ -24,7 +24,7 @@ typedef struct s_arg {
 
 typedef struct s_cmd {
 	char	*cmd;
-	char	**args;
+	char	**argv;
 	int		pipe;
 }	t_cmd;
 
@@ -41,6 +41,9 @@ int	ft_exit(char **cmd, t_arg *arg);
 int		update_env(const char *key, t_arg *arg);
 int		unset_env(const char *key, t_arg *arg);
 t_list	*find_env(const char *key, t_arg *arg);
+
+char	*get_env_key(t_list *node);
+char	*get_env_value(t_list *node);
 
 // error.c
 typedef enum e_error_type {

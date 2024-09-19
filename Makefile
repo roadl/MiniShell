@@ -17,7 +17,8 @@ LIBFT = libft.a
 LIBFT_DIR = ./libft
 HEADER = ./minishell.h
 SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c \
-	 execute/execute.c env/env.c error/error.c init/init.c debug/debug.c
+	execute/execute.c env/env.c env/env_util.c \
+	error/error.c init/init.c debug/debug.c
 LINKING_FLAGS = -lreadline -L${HOME}/.brew/opt/readline/lib
 COMFILE_FLAGS = -I${HOME}/.brew/opt/readline/include
 OBJS = $(SRCS:.c=.o)
