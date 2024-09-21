@@ -88,7 +88,7 @@ int	update_env(const char *str, t_arg *arg)
 	}
 	key = ft_substr(str, 0, ft_strchr(str, '=') - str);
 	if (!key)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	node = find_env(key, arg);
 	if (!node)
 	{
@@ -97,7 +97,7 @@ int	update_env(const char *str, t_arg *arg)
 	}
 	node->content = ft_strdup(str);
 	if (!node || !node->content)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	free(key);
 	return (env_list_to_envp(arg));
 }
@@ -117,6 +117,6 @@ int	unset_env(const char *key, t_arg *arg)
 	free(node->content);
 	node->content = ft_strdup("");
 	if (!node->content)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	return (env_list_to_envp(arg));
 }

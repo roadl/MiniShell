@@ -6,7 +6,7 @@
 #    By: yojin <yojin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:18:23 by yojin             #+#    #+#              #
-#    Updated: 2024/09/16 17:08:52 by yojin            ###   ########.fr        #
+#    Updated: 2024/09/21 18:02:31 by yojin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBFT_DIR = ./libft
 HEADER = ./minishell.h
 SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c \
 	execute/execute.c env/env.c env/env_util.c \
-	error/error.c init/init.c debug/debug.c
+	error/error.c init/init.c debug/debug.c util.c
 LINKING_FLAGS = -lreadline -L${HOME}/.brew/opt/readline/lib
 COMFILE_FLAGS = -I${HOME}/.brew/opt/readline/include
 OBJS = $(SRCS:.c=.o)

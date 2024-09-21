@@ -91,3 +91,16 @@ int	ft_env(char **cmd, t_arg *arg)
 		i++;
 	}
 }
+
+// 현재 디렉터리 주소 출력
+int	ft_pwd(char **cmd, t_arg *arg)
+{
+	char	*cur;
+
+	cur = getcwd(NULL, 0);
+	if (!cur)
+		handle_systemcall_error();
+	printf("%s\n", cur);
+	free(cur);
+	return (0);
+}

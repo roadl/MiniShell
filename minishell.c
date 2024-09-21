@@ -1,27 +1,7 @@
 #include "minishell.h"
 
-int	exec_built_in(char *line, char **cmd, t_arg *arg)
-{
-	int	res;
-
-	res = 0;
-	printf("line: %s\n", line);
-	if (ft_strncmp(line, "echo", 5) == 0)
-		res = ft_echo(cmd, arg, 1);
-	if (ft_strncmp(line, "cd", 3) == 0)
-		res = ft_cd(cmd, arg);
-	if (ft_strncmp(line, "pwd", 4) == 0)
-		res = ft_pwd(cmd, arg);
-	if (ft_strncmp(line, "export", 7) == 0)
-		res = ft_export(cmd, arg);
-	if (ft_strncmp(line, "unset", 6) == 0)
-		res = ft_unset(cmd, arg);
-	if (ft_strncmp(line, "env", 4) == 0)
-		res = ft_env(cmd, arg);
-	if (ft_strncmp(line, "exit", 5) == 0)
-		res = ft_exit(cmd, arg);
-	return (res);
-}
+#define READ 0
+#define WRITE 1
 
 // ctrl-C -> new lline
 // ctrl-D -> exit
@@ -50,8 +30,9 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		//print_envp(arg.envp);
+		// 여기서 파싱해서 arg->cmd_list에 들어옴
 		strs = ft_split(line, ' ');
-		exec_built_in(strs[0], strs, &arg);
+		exec_cmds(&arg);
 		// set_signal_ignore?
 		// 파싱
 		add_history(line);

@@ -13,7 +13,7 @@ static char	*trans_path(char *path)
 	else
 		temp = ft_strjoin(path, "/");
 	if (!temp)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 }
 
 // cd에서 들어온 첫번째 문자열 받아서 이동할 최종 path 리턴
@@ -33,7 +33,7 @@ static char	*get_path(char *find, t_arg *arg)
 			print_error("cd", NULL, "HOME not set", error_built_in);
 			return (0);
 		}
-		return(ft_substr(node->content, 5, ft_strlen(node->content)));
+		return (ft_substr(node->content, 5, ft_strlen(node->content)));
 	}
 	else if (ft_strncmp(find, "-", 2) == 0)
 	{
@@ -43,7 +43,7 @@ static char	*get_path(char *find, t_arg *arg)
 			print_error("cd", NULL, "OLDPWD not set", error_built_in);
 			return (0);
 		}
-		return(ft_substr(node->content, 7, ft_strlen(node->content)));
+		return (ft_substr(node->content, 7, ft_strlen(node->content)));
 	}
 	return (ft_strdup(find));
 }
@@ -79,31 +79,19 @@ int	ft_cd(char **cmd, t_arg *arg)
 
 	path = get_path(cmd[1], arg);
 	if (!path)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	cur = getcwd(NULL, 0);
 	if (!cur)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	if (chdir(path) == -1)
-		return (print_error("cd", path, "No such file or directory", error_built_in));
+		return (print_error("cd", path, \
+			"No such file or directory", error_built_in));
 	free(path);
 	update_env(ft_strjoin("OLDPWD=", cur), arg);
 	cur = getcwd(NULL, 0);
 	if (!cur)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	update_env(ft_strjoin("PWD=", cur), arg);
-	return (0);
-}
-
-// 현재 디렉터리 주소 출력
-int	ft_pwd(char **cmd, t_arg *arg)
-{
-	char	*cur;
-
-	cur = getcwd(NULL, 0);
-	if (!cur)
-		print_error(NULL, NULL, NULL, error_systemcall);
-	printf("%s\n", cur);
-	free(cur);
 	return (0);
 }
 

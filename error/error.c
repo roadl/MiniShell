@@ -10,46 +10,46 @@ static void	ft_putnstr_fd(char *s, int n, int fd)
 	write(fd, s, len);
 }
 
-static int	print_bi_error(char *cmd, char *arg, char *msg, t_error_type err_type)
+static int	print_bi_error(char *cmd, char *arg, char *msg, t_error_type type)
 {
 	ft_putstr_fd(cmd, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
-	if (err_type == invalid_identifier)
+	if (type == invalid_identifier)
 		ft_putstr_fd("`", STDERR_FILENO);
-	if (err_type == invalid_option)
+	if (type == invalid_option)
 		ft_putnstr_fd(arg, 2, STDERR_FILENO);
 	else if (arg)
 		ft_putstr_fd(arg, STDERR_FILENO);
-	if (err_type == invalid_identifier)
+	if (type == invalid_identifier)
 		ft_putstr_fd("'", STDERR_FILENO);
 	if (arg)
 		ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
-	if (err_type == invalid_identifier)
+	if (type == invalid_identifier)
 		return (2);
 	return (1);
 }
 
-static int	print_exec_error(char *cmd, char *arg, char *msg, t_error_type err_type)
+static int	print_exec_error(char *cmd, char *arg, char *msg, t_error_type type)
 {
-	if (err_type == error_redirection)
+	if (type == error_redirection)
 		msg = strerror(errno);
-	if (err_type != error_syntax && err_type != error_max_heredoc)
+	if (type != error_syntax && type != error_max_heredoc)
 	{
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 	}
 	ft_putstr_fd(msg, STDERR_FILENO);
-	if (err_type == error_max_heredoc)
+	if (type == error_max_heredoc)
 	{
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 	}
 	ft_putstr_fd("\n", 2);
-	if (err_type == error_redirection)
+	if (type == error_redirection)
 		exit(EXIT_FAILURE);
-	if (err_type == error_max_heredoc)
+	if (type == error_max_heredoc)
 		exit(2);
 	return (1);
 }
@@ -69,13 +69,7 @@ int	print_error(char *cmd, char *arg, char *msg, t_error_type err_type)
 	return (print_exec_error(cmd, arg, msg, err_type));
 }
 
-void	free_all(t_arg *arg)
+void	handle_systemcall_error(void)
 {
-	int	i;
-
-	i = 0;
-	if (arg->env_list)
-		ft_lstclear(&arg->env_list, free);
-	if (arg->cmd_list)
-		ft_lstclear(&arg->cmd_list, free);
+	print_error(NULL, NULL, NULL, error_systemcall);
 }

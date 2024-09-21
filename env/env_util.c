@@ -15,7 +15,7 @@ char	*get_env_key(t_list *node)
 		i++;
 	key = ft_substr(content, 0, i);
 	if (!key)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	return (key);
 }
 
@@ -32,6 +32,6 @@ char	*get_env_value(t_list *node)
 		return (NULL);
 	value = ft_strdup(temp);
 	if (!value)
-		print_error(NULL, NULL, NULL, error_systemcall);
+		handle_systemcall_error();
 	return (value);
 }
