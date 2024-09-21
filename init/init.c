@@ -58,8 +58,7 @@ int	init_arg(t_arg *arg, char **envp)
 	arg->cmd_list = (t_list *)malloc(sizeof(t_list *));
 	if (!arg->cmd_list)
 		return (0);
-	arg->exit_code = EXIT_SUCCESS;
-	arg->last_exit_code = -1;
+	arg->last_exit_code = EXIT_SUCCESS;
 	// 빌트인 하나만 들어왔을때 리디렉션 어캐할지 생각해야 함
 	return (1);
 }

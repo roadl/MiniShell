@@ -60,16 +60,17 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	{
 		if (node->next)
 			close(fd[READ]);
-		else
-			cmd->write_fd = open(arg->outfile, \
-				O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (node == arg->commands->next)
-			cmd->read_fd = open(arg->infile, O_RDONLY);
-		if (cmd->read_fd < 0 || info->write_fd < 0)
-			error_exit();
+		// else
+		// 	cmd->write_fd = open(arg->outfile, \
+		// 		O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		// if (node == arg->commands->next)
+		// 	cmd->read_fd = open(arg->infile, O_RDONLY);
+		if (cmd->read_fd < 0 || cmd->write_fd < 0)
+			handle_systemcall_error();
 		if (is_built_in(cmd->cmd))
-			exec_built_in(cmd, arg)
-		execute_command(arg, cmd);
+			exec_built_in(cmd, arg);
+		else
+			execute_command(arg, cmd);
 	}
 	return (pid);
 }
@@ -95,6 +96,7 @@ int	exec_cmds(t_arg *arg)
 			handle_systemcall_error();
 		if (node->next)
 			cmd->write_fd = fd[WRITE];
+
 		pid = run_child_process(arg, fd, cmd);
 		node = node->next;
 	}
