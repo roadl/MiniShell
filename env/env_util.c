@@ -30,6 +30,7 @@ char	*get_env_value(t_list *node)
 	temp = ft_strchr(node->content, '=');
 	if (!temp)
 		return (NULL);
+	temp++;
 	value = ft_strdup(temp);
 	if (!value)
 		handle_systemcall_error();

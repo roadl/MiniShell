@@ -3,6 +3,11 @@
 # define READ 0
 # define WRITE 1
 
+void	handle_redi(t_cmd *cmd)
+{
+	
+}
+
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
 	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
@@ -22,29 +27,45 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 	return ;
 }
 
-int	exec_built_in(t_arg *arg, t_cmd *cmd)
+int	exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	int		res;
 	char	*command;
 	char	*argv;
 
 	res = 0;
-	printf("line: %s\n", cmd->cmd);
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
-		res = ft_echo(cmd, arg, 1);
+		res = ft_echo(cmd, 1);
 	if (ft_strncmp(cmd->cmd, "cd", 3) == 0)
-		res = ft_cd(cmd, arg);
+		res = ft_cd(cmd, env_list, envp);
 	if (ft_strncmp(cmd->cmd, "pwd", 4) == 0)
-		res = ft_pwd(cmd, arg);
+		res = ft_pwd(cmd);
 	if (ft_strncmp(cmd->cmd, "export", 7) == 0)
-		res = ft_export(cmd, arg);
+		res = ft_export(cmd, env_list, envp);
 	if (ft_strncmp(cmd->cmd, "unset", 6) == 0)
-		res = ft_unset(cmd, arg);
+		res = ft_unset(cmd, env_list, envp);
 	if (ft_strncmp(cmd->cmd, "env", 4) == 0)
-		res = ft_env(cmd, arg);
+		res = ft_env(cmd, env_list, envp);
 	if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
-		res = ft_exit(cmd, arg);
+		res = ft_exit(cmd);
 	return (res);
+
+}
+
+int	exec_built_in_child(t_cmd *cmd, char **envp)
+{
+	t_list	*env_list;
+	char	**new_envp;
+	int		res;
+
+	env_list = NULL;
+	new_envp = NULL;
+	init_env_list(&env_list, envp);
+	new_envp = env_list_to_envp(env_list, new_envp);
+	res = exec_built_in(cmd, &env_list, &new_envp);
+	ft_lstclear(&env_list, free);
+	free_strs(new_envp);
+	exit(res);
 }
 
 int	run_child_process(t_arg *arg, int *fd, t_list *node)
@@ -53,6 +74,7 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	int		pid;
 
 	cmd = node->content;
+	printf("run_child: %s\n", cmd->cmd);
 	pid = fork();
 	if (pid == -1)
 		handle_systemcall_error();
@@ -60,49 +82,17 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	{
 		if (node->next)
 			close(fd[READ]);
-		// else
-		// 	cmd->write_fd = open(arg->outfile, \
-		// 		O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		// if (node == arg->commands->next)
-		// 	cmd->read_fd = open(arg->infile, O_RDONLY);
+		else
+			cmd->write_fd = open("outfile", \
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (node == arg->cmd_list)
+			cmd->read_fd = open("infile", O_RDONLY);
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
 		if (is_built_in(cmd->cmd))
-			exec_built_in(cmd, arg);
+			exec_built_in_child(cmd, arg->envp);
 		else
 			execute_command(arg, cmd);
 	}
 	return (pid);
-}
-
-int	exec_cmds(t_arg *arg)
-{
-	t_list	*node;
-	t_cmd	*cmd;
-	int		fd[2];
-	int		pid;
-	int		status;
-
-	node = arg->cmd_list;
-	if (is_only_built_in(arg))
-		return (exec_built_in(node->content, arg));
-	while (node)
-	{
-		cmd = node->content;
-		if (node != arg->cmd_list)
-			cmd->read_fd = fd[READ];
-		close(fd[WRITE]);
-		if (node->next && pipe(fd) == -1)
-			handle_systemcall_error();
-		if (node->next)
-			cmd->write_fd = fd[WRITE];
-
-		pid = run_child_process(arg, fd, cmd);
-		node = node->next;
-	}
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		arg->last_exit_code = WEXITSTATUS(status);
-	else
-		arg->last_exit_code = 128 + WTERMSIG(status);
 }

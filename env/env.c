@@ -54,17 +54,19 @@ static char	*ft_strjoin_c(char const *s1, char const *s2, char c)
 
 /// @brief find env, key값으로 env 돌면서 찾아서 그 문자열 주소 리턴, 없으면 null
 /// @return success string address, fail 0
-t_list	*find_env(const char *key, t_arg *arg)
+t_list	*find_env(const char *key, t_list *env_list)
 {
 	t_list	*node;
 	char	*content;
+	int		len;
 
-	node = arg->env_list;
+	node = env_list;
+	len = ft_strlen(key);
 	while (node)
 	{
 		content = node->content;
-		if (ft_strncmp(key, content, ft_strlen(key)) == 0 \
-			&& content[ft_strlen(key)] == '=')
+		if (ft_strncmp(key, content, len) == 0 && \
+				(content[len] == '\0' || content[len] == '='))
 			return (node);
 		node = node->next;
 	}
@@ -74,7 +76,7 @@ t_list	*find_env(const char *key, t_arg *arg)
 /// @brief update env, 있으면 덮어쓰기, 없으면 만들어서 넣기
 /// @return success 0, fail -1
 // key value가 아니라 문자열로 들어온거 = 기준으로 잘라서 앞에꺼 key로 써야 할듯
-int	update_env(const char *str, t_arg *arg)
+int	update_env(const char *str, t_list **env_list, char ***envp)
 {
 	t_list	*node;
 	char	*key;
@@ -89,20 +91,23 @@ int	update_env(const char *str, t_arg *arg)
 	key = ft_substr(str, 0, ft_strchr(str, '=') - str);
 	if (!key)
 		handle_systemcall_error();
-	node = find_env(key, arg);
+	node = find_env(key, *env_list);
 	if (!node)
 	{
 		node = ft_lstnew(ft_strdup(str));
-		ft_lstadd_back(&arg->env_list, node);
+		ft_lstadd_back(env_list, node);
 	}
+	else
+		free(node->content);
 	node->content = ft_strdup(str);
 	if (!node || !node->content)
 		handle_systemcall_error();
 	free(key);
-	return (env_list_to_envp(arg));
+	*envp = env_list_to_envp(*env_list, *envp);
+	return (0);
 }
 
-int	unset_env(const char *key, t_arg *arg)
+int	unset_env(const char *key, t_list **env_list, char ***envp)
 {
 	t_list	*node;
 
@@ -111,12 +116,13 @@ int	unset_env(const char *key, t_arg *arg)
 		print_error("unset", key, "not a valid identifier", invalid_identifier);
 		return (-1);
 	}
-	node = find_env(key, arg);
+	node = find_env(key, *env_list);
 	if (!node)
 		return (0);
 	free(node->content);
 	node->content = ft_strdup("");
 	if (!node->content)
 		handle_systemcall_error();
-	return (env_list_to_envp(arg));
+	*envp = env_list_to_envp(*env_list, *envp);
+	return (0);
 }

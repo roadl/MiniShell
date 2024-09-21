@@ -1,50 +1,49 @@
 #include "minishell.h"
 
-static int	init_env_list(t_arg *arg, char **envp)
+int	init_env_list(t_list **lst, char **envp)
 {
 	int		i;
 	t_list	*new;
 
-	arg->env_list = NULL;
 	i = 0;
 	while (envp[i])
 	{
 		new = ft_lstnew(ft_strdup(envp[i]));
 		if (!new || !new->content)
-			print_error(NULL, NULL, NULL, error_systemcall);
-		ft_lstadd_back(&(arg->env_list), new);
+			handle_systemcall_error();
+		ft_lstadd_back(lst, new);
 		i++;
 	}
 	return (1);
 }
 
-int	env_list_to_envp(t_arg *arg)
+char	**env_list_to_envp(t_list *lst, char **envp)
 {
 	int		size;
 	int		i;
 	t_list	*node;
 
 	i = 0;
-	if (arg->envp)
-		while (arg->envp[i])
-			free(arg->envp[i++]);
-	free(arg->envp);
-	size = ft_lstsize(arg->env_list);
-	arg->envp = (char **)malloc(sizeof(char *) * (size + 1));
-	if (!arg->envp)
-		print_error(NULL, NULL, NULL, error_systemcall);
-	node = arg->env_list;
+	if (envp)
+		while (envp[i])
+			free(envp[i++]);
+	free(envp);
+	size = ft_lstsize(lst);
+	envp = (char **)malloc(sizeof(char *) * (size + 1));
+	if (!envp)
+		handle_systemcall_error();
+	node = lst;
 	i = 0;
 	while (node)
 	{
-		arg->envp[i] = ft_strdup(node->content);
-		if (!arg->envp[i])
-			print_error(NULL, NULL, NULL, error_systemcall);
+		envp[i] = ft_strdup(node->content);
+		if (!envp[i])
+			handle_systemcall_error();
 		node = node->next;
 		i++;
 	}
-	arg->envp[i] = NULL;
-	return (1);
+	envp[i] = NULL;
+	return (envp);
 }
 
 // last_exit_code 어떻게 할지 생각해야 함 ($?)
@@ -53,12 +52,13 @@ int	env_list_to_envp(t_arg *arg)
 int	init_arg(t_arg *arg, char **envp)
 {
 	arg->envp = NULL;
-	if (!init_env_list(arg, envp) || !env_list_to_envp(arg))
-		return (0);
-	arg->cmd_list = (t_list *)malloc(sizeof(t_list *));
-	if (!arg->cmd_list)
-		return (0);
+	arg->env_list = NULL;
+	init_env_list(&arg->env_list, envp);
+	arg->envp = env_list_to_envp(arg->env_list, arg->envp);
+	arg->cmd_list = NULL;
 	arg->last_exit_code = EXIT_SUCCESS;
-	// 빌트인 하나만 들어왔을때 리디렉션 어캐할지 생각해야 함
+	// if (dup2(STDIN_FILENO, arg->origin_stdin) == -1 || \
+	// 	dup2(STDOUT_FILENO, arg->origin_stdout) == -1)
+	// 	handle_systemcall_error();
 	return (1);
 }

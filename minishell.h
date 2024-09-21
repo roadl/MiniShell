@@ -27,23 +27,23 @@ typedef struct s_cmd {
 	int		pipe;
 	int		read_fd;
 	int		write_fd;
-	t_arg	*arg;
+	int		is_child;
 	t_list	*redi_list;
 }	t_cmd;
 
 // built_in.c
-int		ft_echo(char **cmd, t_arg *arg, int option);
-int		ft_cd(char **cmd, t_arg *arg);
-int		ft_pwd(char **cmd, t_arg *arg);
-int		ft_export(char **cmd, t_arg *arg);
-int		ft_unset(char **cmd, t_arg *arg);
-int		ft_env(char **cmd, t_arg *arg);
-int		ft_exit(char **cmd, t_arg *arg);
+int		ft_echo(t_cmd *cmd, int option);
+int		ft_cd(t_cmd *cmd, t_list **env_list, char ***envp);
+int		ft_pwd(t_cmd *cmd);
+int		ft_export(t_cmd *cmd, t_list **env_list, char ***envp);
+int		ft_unset(t_cmd *cmd, t_list **env_list, char ***envp);
+int		ft_env(t_cmd *cmd, t_list **env_list, char ***envp);
+int		ft_exit(t_cmd *cmd);
 
 // env.c
-int		update_env(const char *key, t_arg *arg);
-int		unset_env(const char *key, t_arg *arg);
-t_list	*find_env(const char *key, t_arg *arg);
+int		update_env(const char *key, t_list **env_list, char ***envp);
+int		unset_env(const char *key, t_list **env_list, char ***envp);
+t_list	*find_env(const char *key, t_list *env_list);
 
 char	*get_env_key(t_list *node);
 char	*get_env_value(t_list *node);
@@ -66,20 +66,24 @@ void	handle_systemcall_error(void);
 int		print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 
 // execute.c
+int		exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp);
 int		run_child_process(t_arg *arg, int *fd, t_list *node);
-int		exec_cmds(t_arg *arg);
 
 // init.c
 int		init_arg(t_arg *arg, char **envp);
-int		env_list_to_envp(t_arg *arg);
+int		init_env_list(t_list **lst, char **envp);
+char	**env_list_to_envp(t_list *lst, char **envp);
 
 // debug.c
-void	print_list(t_list *lst);
+void	print_strs(char **strs);
+void	print_cmd_list(t_list *lst);
 void	print_envp(char **envp);
 
 // util.c
 int		is_built_in(char *cmd);
 int		is_only_built_in(t_arg *arg);
+void	free_strs(void *strs);
+void	free_cmd(void *cmd);
 void	free_all(t_arg *arg);
 
 #endif

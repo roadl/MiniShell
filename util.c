@@ -2,17 +2,20 @@
 
 int	is_built_in(char *cmd)
 {
-	const char	built_in[7] = {"echo", "cd", "pwd", "export", \
-		"unset", "env", "exit"};
-	int			i;
-
-	i = 0;
-	while (i < 7)
-	{
-		if (ft_strncmp(built_in[i], cmd, ft_strlen(cmd)) == 0)
-			return (1);
-		i++;
-	}
+	if (ft_strncmp(cmd, "echo", 5) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "cd", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "pwd", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "export", 7) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "unset", 6) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "env", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "exit", 5) == 0)
+		return (1);
 	return (0);
 }
 
@@ -26,21 +29,44 @@ int	is_only_built_in(t_arg *arg)
 	return (0);
 }
 
-static void	free_cmd(t_cmd *cmd)
+void	free_strs(void *_strs)
 {
-	int	i;
+	char	**strs;
+	int		i;
 
+	strs = _strs;
+	i = 0;
+	if (strs)
+		while (strs[i])
+			free(strs[i++]);
+	free(strs);
+}
+
+// 아니 슈발 왜 redi에 NULL이 안 들어가 있을때가 있지 ㅈ버근가
+void	free_cmd(void *_cmd)
+{
+	t_cmd	*cmd;
+	int		i;
+
+	cmd = _cmd;
+	// printf("free cmd: %p\n", cmd->cmd);
 	free(cmd->cmd);
 	i = 0;
 	if (cmd->argv)
 	{
 		while (cmd->argv[i])
 		{
+			// printf("free argv[%d]: %p\n", i, cmd->argv[i]);
 			free(cmd->argv[i]);
 			i++;
 		}
+		// printf("free argv: %p\n", cmd->argv);
 		free(cmd->argv);
 	}
+	// printf("free redi_list: %p\n", cmd->redi_list);
+	// if (cmd->redi_list)
+		// ft_lstclear(&cmd->redi_list, free);
+	// printf("free: %p\n", cmd);
 	free(cmd);
 }
 
