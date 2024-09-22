@@ -1,7 +1,7 @@
 #include "minishell.h"
 
-# define READ 0
-# define WRITE 1
+#define READ 0
+#define WRITE 1
 
 void	handle_redi(t_cmd *cmd)
 {
@@ -15,12 +15,19 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 		handle_systemcall_error();
 	close(cmd->read_fd);
 	close(cmd->write_fd);
-	if (access(cmd->cmd, X_OK) != 0)
+	if (ft_strchr(cmd->cmd, '/') == 0)
 	{
-		ft_putstr_fd("pipex: command not found: ", STDERR_FILENO);
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
-		exit(EXIT_FAILURE);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		exit(127);
+	}
+	if (access(cmd->cmd, X_OK) != 0 && access(cmd->cmd, F_OK) == 0)
+	{
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+		exit(126);
 	}
 	if (execve(cmd->cmd, cmd->argv, arg->envp))
 		handle_systemcall_error();
@@ -49,7 +56,6 @@ int	exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp)
 	if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
 		res = ft_exit(cmd);
 	return (res);
-
 }
 
 int	exec_built_in_child(t_cmd *cmd, char **envp)

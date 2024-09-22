@@ -12,7 +12,7 @@ static int	print_export(t_list *env_list)
 		if (ft_strncmp(node->content, "", 1) == 0)
 		{
 			node = node->next;
-			continue;
+			continue ;
 		}
 		key = get_env_key(node);
 		value = get_env_value(node);
@@ -47,7 +47,8 @@ int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 		}
 		if (i == 1 && cmd->argv[i][0] == '-')
 		{
-			print_error("export", cmd->argv[i], "invalid option", invalid_option);
+			print_error("export", cmd->argv[i], \
+				"invalid option", invalid_option);
 			return (0);
 		}
 		update_env(cmd->argv[i], env_list, envp);
@@ -68,7 +69,8 @@ int	ft_unset(t_cmd *cmd, t_list **env_list, char ***envp)
 	{
 		if (i == 1 && cmd->argv[i][0] == '-')
 		{
-			print_error("unset", cmd->argv[i], "invalid option", invalid_option);
+			print_error("unset", cmd->argv[i], \
+				"invalid option", invalid_option);
 			return (0);
 		}
 		unset_env(cmd->argv[i], env_list, envp);

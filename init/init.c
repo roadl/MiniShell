@@ -57,8 +57,7 @@ int	init_arg(t_arg *arg, char **envp)
 	arg->envp = env_list_to_envp(arg->env_list, arg->envp);
 	arg->cmd_list = NULL;
 	arg->last_exit_code = EXIT_SUCCESS;
-	// if (dup2(STDIN_FILENO, arg->origin_stdin) == -1 || \
-	// 	dup2(STDOUT_FILENO, arg->origin_stdout) == -1)
-	// 	handle_systemcall_error();
+	arg->origin_stdin = dup(STDIN_FILENO);
+	arg->origin_stdout = dup(STDOUT_FILENO);
 	return (1);
 }

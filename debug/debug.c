@@ -13,6 +13,7 @@ void	print_strs(char **strs)
 void	print_cmd_list(t_list *lst)
 {
 	int		i;
+	int		j;
 	t_list	*node;
 	t_cmd	*cmd;
 
@@ -25,9 +26,12 @@ void	print_cmd_list(t_list *lst)
 	i = 0;
 	while (node)
 	{
+		j = 0;
 		cmd = node->content;
 		printf("[%d]: %s\n", i++, cmd->cmd);
 		node = node->next;
+		while (cmd->argv[j])
+			printf("	%s\n", cmd->argv[j++]);
 	}
 }
 

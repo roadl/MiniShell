@@ -42,7 +42,6 @@ void	free_strs(void *_strs)
 	free(strs);
 }
 
-// 아니 슈발 왜 redi에 NULL이 안 들어가 있을때가 있지 ㅈ버근가
 void	free_cmd(void *_cmd)
 {
 	t_cmd	*cmd;

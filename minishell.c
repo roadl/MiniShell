@@ -71,7 +71,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line == NULL)
 		{
 			printf("line null\n");
-			continue;
+			continue ;
 		}
 		if (*line == '\0')
 		{
@@ -83,13 +83,12 @@ int	main(int argc, char **argv, char **envp)
 		// 여기서 파싱해서 arg->cmd_list에 들어옴
 		strs = ft_split(line, '|');
 		test_parse(strs, &arg);
-		print_cmd_list(arg.cmd_list);
+		//print_cmd_list(arg.cmd_list);
 		exec_cmds(&arg);
 		// set_signal_ignore?
 		// 파싱
 		add_history(line);
 		free(line);
-		line = NULL;
 		free_strs(strs);
 		ft_lstclear(&arg.cmd_list, free_cmd);
 		// 실행

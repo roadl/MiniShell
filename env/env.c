@@ -83,18 +83,15 @@ int	update_env(const char *str, t_list **env_list, char ***envp)
 	char	*content;
 
 	if (!is_valid_key(str, EXPORT))
-	{
-		print_error("export", str, "not a valid identifier", \
-			invalid_identifier);
-		return (-1);
-	}
+		return (print_error("export", str, "not a valid identifier", \
+			invalid_identifier));
 	key = ft_substr(str, 0, ft_strchr(str, '=') - str);
 	if (!key)
 		handle_systemcall_error();
 	node = find_env(key, *env_list);
 	if (!node)
 	{
-		node = ft_lstnew(ft_strdup(str));
+		node = ft_lstnew(NULL);
 		ft_lstadd_back(env_list, node);
 	}
 	else
