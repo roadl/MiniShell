@@ -3,18 +3,15 @@
 #define READ 0
 #define WRITE 1
 
-// void	handle_redi(t_cmd *cmd)
-// {
-	
-// }
-
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
 	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
 		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
 		handle_systemcall_error();
-	close(cmd->read_fd);
-	close(cmd->write_fd);
+	if (cmd->read_fd != STDIN_FILENO)
+		close(cmd->read_fd);
+	if (cmd->write_fd != STDOUT_FILENO)
+		close(cmd->write_fd);
 	if (ft_strchr(cmd->cmd, '/') == 0)
 	{
 		ft_putstr_fd("fastshell: ", STDERR_FILENO);
@@ -87,10 +84,9 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 		if (node->next)
 			close(fd[READ]);
 		else
-			cmd->write_fd = open("outfile", \
-				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			cmd->write_fd = STDOUT_FILENO;
 		if (node == arg->cmd_list)
-			cmd->read_fd = open("infile", O_RDONLY);
+			cmd->read_fd = STDIN_FILENO;
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
 		if (is_built_in(cmd->cmd))

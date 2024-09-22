@@ -15,7 +15,6 @@ void	test_parse(char **strs, t_arg *arg)
 		cmd->argv = ft_split(strs[i], ' ');
 		cmd->cmd = ft_strdup(cmd->argv[0]);
 		cmd->redi_list = NULL;
-		cmd->is_child = 0;
 		ft_lstadd_back(&arg->cmd_list, ft_lstnew(cmd));
 		i++;
 	}
@@ -50,6 +49,7 @@ int	exec_cmds(t_arg *arg)
 		arg->last_exit_code = WEXITSTATUS(status);
 	else
 		arg->last_exit_code = 128 + WTERMSIG(status);
+	wait(0);
 	return (arg->last_exit_code);
 }
 
