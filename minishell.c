@@ -50,6 +50,7 @@ int	exec_cmds(t_arg *arg)
 		arg->last_exit_code = WEXITSTATUS(status);
 	else
 		arg->last_exit_code = 128 + WTERMSIG(status);
+	return (arg->last_exit_code);
 }
 
 // ctrl-C -> new lline
@@ -78,7 +79,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("line nothing\n");
 			continue ;
 		}
-		printf("line: %s\n", line);
+		//printf("line: %s\n", line);
 		//print_envp(arg.envp);
 		// 여기서 파싱해서 arg->cmd_list에 들어옴
 		strs = ft_split(line, '|');
@@ -94,4 +95,5 @@ int	main(int argc, char **argv, char **envp)
 		// 실행
 		// free, unlink
 	}
+	argv = NULL;
 }

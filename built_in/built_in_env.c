@@ -31,8 +31,6 @@ static int	print_export(t_list *env_list)
 // 있어도 바뀌는게 아니라 추가만 된다.
 int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 {
-	char	*key;
-	char	*value;
 	int		i;
 
 	if (!cmd->argv[1])
@@ -54,6 +52,7 @@ int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 		update_env(cmd->argv[i], env_list, envp);
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
 
 // option에 대해서 처리해야함
@@ -63,7 +62,7 @@ int	ft_unset(t_cmd *cmd, t_list **env_list, char ***envp)
 	int	i;
 
 	if (!cmd->argv[1])
-		return (0);
+		return (EXIT_FAILURE);
 	i = 1;
 	while (cmd->argv[i])
 	{
@@ -76,21 +75,19 @@ int	ft_unset(t_cmd *cmd, t_list **env_list, char ***envp)
 		unset_env(cmd->argv[i], env_list, envp);
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
 
 // 입력 인자 없어야 함
 // = 이 있을때만 출력해야 함
-int	ft_env(t_cmd *cmd, t_list **env_list, char ***envp)
+int	ft_env(t_cmd *cmd, char ***envp)
 {
 	int		i;
 	char	**_envp;
 
 	_envp = *envp;
 	if (cmd->argv[1])
-	{
-		print_error("env", cmd->argv[1], strerror(ENOENT), error_built_in);
-		return (-1);
-	}
+		return (print_error("env", cmd->argv[1], strerror(ENOENT), error_built_in));
 	i = 0;
 	while (_envp[i])
 	{
@@ -98,6 +95,7 @@ int	ft_env(t_cmd *cmd, t_list **env_list, char ***envp)
 			printf("%s\n", _envp[i]);
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
 
 // 현재 디렉터리 주소 출력

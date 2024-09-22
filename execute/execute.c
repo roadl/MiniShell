@@ -3,10 +3,10 @@
 #define READ 0
 #define WRITE 1
 
-void	handle_redi(t_cmd *cmd)
-{
+// void	handle_redi(t_cmd *cmd)
+// {
 	
-}
+// }
 
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
@@ -37,8 +37,6 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 int	exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	int		res;
-	char	*command;
-	char	*argv;
 
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
@@ -52,7 +50,7 @@ int	exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp)
 	if (ft_strncmp(cmd->cmd, "unset", 6) == 0)
 		res = ft_unset(cmd, env_list, envp);
 	if (ft_strncmp(cmd->cmd, "env", 4) == 0)
-		res = ft_env(cmd, env_list, envp);
+		res = ft_env(cmd, envp);
 	if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
 		res = ft_exit(cmd);
 	return (res);

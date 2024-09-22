@@ -2,7 +2,7 @@
 
 static void	ft_putnstr_fd(char *s, int n, int fd)
 {
-	size_t	len;
+	int	len;
 
 	len = ft_strlen(s);
 	if (n < len)
@@ -31,7 +31,7 @@ static int	print_bi_error(char *cmd, char *arg, char *msg, t_error_type type)
 	return (1);
 }
 
-static int	print_exec_error(char *cmd, char *arg, char *msg, t_error_type type)
+static int	print_exec_error(char *arg, char *msg, t_error_type type)
 {
 	if (type == error_redirection)
 		msg = strerror(errno);
@@ -66,7 +66,7 @@ int	print_error(char *cmd, char *arg, char *msg, t_error_type err_type)
 	}
 	if (err_type >= error_built_in)
 		return (print_bi_error(cmd, arg, msg, err_type));
-	return (print_exec_error(cmd, arg, msg, err_type));
+	return (print_exec_error(arg, msg, err_type));
 }
 
 void	handle_systemcall_error(void)

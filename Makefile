@@ -6,12 +6,12 @@
 #    By: yojin <yojin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:18:23 by yojin             #+#    #+#              #
-#    Updated: 2024/09/21 19:25:26 by yojin            ###   ########.fr        #
+#    Updated: 2024/09/22 20:05:32 by yojin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 LDIR = ./
 LIBFT = libft.a
 LIBFT_DIR = ./libft
@@ -31,7 +31,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ -I$(LDIR) $(LIBFT_DIR)/$(LIBFT) -lreadline
 
 %.o: %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@ -I$(LDIR) -lreadline
+	$(CC) $(CFLAGS) -c $< -o $@ -I$(LDIR)
 
 re: fclean all
 

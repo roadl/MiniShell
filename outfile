@@ -1,0 +1,16 @@
+Makefile
+built_in
+debug
+env
+error
+execute
+infile
+init
+libft
+minishell
+minishell.c
+minishell.h
+minishell.o
+outfile
+util.c
+util.o

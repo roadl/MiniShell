@@ -2,7 +2,7 @@
 
 // cd에서 들어온 첫번째 문자열 받아서 이동할 최종 path 리턴
 // ~, -, 없을때 처리해야 함
-static char	*get_path(char *find, t_cmd *cmd, t_list *env_list)
+static char	*get_path(char *find, t_list *env_list)
 {
 	t_list	*node;
 	char	*path;
@@ -10,7 +10,7 @@ static char	*get_path(char *find, t_cmd *cmd, t_list *env_list)
 	node = NULL;
 	if (!find || ft_strncmp(find, "~", 2) == 0)
 		node = find_env("HOME", env_list);
-	else if (ft_strncmp(find, "-", 2) == 0)
+	else
 		node = find_env("OLDPWD", env_list);
 	if (!node || !ft_strchr(node->content, '='))
 	{
@@ -22,14 +22,14 @@ static char	*get_path(char *find, t_cmd *cmd, t_list *env_list)
 	}
 	if (!find || ft_strncmp(find, "~", 2) == 0)
 		path = ft_substr(node->content, 5, ft_strlen(node->content));
-	else if (ft_strncmp(find, "-", 2) == 0)
+	else
 		path = ft_substr(node->content, 7, ft_strlen(node->content));
 	if (!path)
 		handle_systemcall_error();
 	return (path);
 }
 
-static char	*update_pwd(const char *key, t_list **env_list, char ***envp)
+static void	update_pwd(const char *key, t_list **env_list, char ***envp)
 {
 	char	*cur;
 	char	*temp;
@@ -67,14 +67,11 @@ int	ft_echo(t_cmd *cmd, int option)
 // 경로 오면 터짐 버근가
 int	ft_cd(t_cmd *cmd, t_list **env_list, char ***envp)
 {
-	char	*cur;
-	char	*temp;
 	char	*path;
-	t_list	*node;
 
 	if (!cmd->argv[1] || ft_strncmp(cmd->argv[1], "-", 2) == 0 || \
 		ft_strncmp(cmd->argv[1], "~", 2) == 0)
-		path = get_path(cmd->argv[1], cmd, *env_list);
+		path = get_path(cmd->argv[1], *env_list);
 	else
 	{
 		path = ft_strdup(cmd->argv[1]);

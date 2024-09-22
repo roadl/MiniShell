@@ -31,18 +31,24 @@ typedef struct s_cmd {
 	t_list	*redi_list;
 }	t_cmd;
 
+typedef struct s_redi {
+	char	*redi;
+	char	*file;
+}	t_redi;
+
+
 // built_in.c
 int		ft_echo(t_cmd *cmd, int option);
 int		ft_cd(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_pwd(t_cmd *cmd);
 int		ft_export(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_unset(t_cmd *cmd, t_list **env_list, char ***envp);
-int		ft_env(t_cmd *cmd, t_list **env_list, char ***envp);
+int		ft_env(t_cmd *cmd, char ***envp);
 int		ft_exit(t_cmd *cmd);
 
 // env.c
-int		update_env(const char *key, t_list **env_list, char ***envp);
-int		unset_env(const char *key, t_list **env_list, char ***envp);
+int		update_env(char *str, t_list **env_list, char ***envp);
+int		unset_env(char *key, t_list **env_list, char ***envp);
 t_list	*find_env(const char *key, t_list *env_list);
 
 char	*get_env_key(t_list *node);
