@@ -24,10 +24,8 @@ typedef struct s_arg {
 typedef struct s_cmd {
 	char	*cmd;
 	char	**argv;
-	int		pipe;
 	int		read_fd;
 	int		write_fd;
-	int		is_child;
 	t_list	*redi_list;
 }	t_cmd;
 
