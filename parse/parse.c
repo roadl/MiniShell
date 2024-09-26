@@ -104,9 +104,8 @@ t_list *parsing(char *input, int *cmd_count)
 // 	{
 // 		t_cmd *cmd = index_cmd(cmds, i);
 // 		printf("cmd: %s\n", cmd->cmd);
-// 		printf("argv: ");
 // 		for (j = 0; cmd->argv[j]; j++)
-// 			printf("%s ", cmd->argv[j]);
+// 			printf("argv[%d][%d]: %s\n", i, j, cmd->argv[j]);
 // 		printf("\n");
 // 		t_list *node = cmd->redi_list;
 // 		while (node)

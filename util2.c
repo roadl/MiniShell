@@ -57,3 +57,30 @@ t_cmd	*index_cmd(t_list *lst, int index)
 	}
 	return (NULL);
 }
+
+char	*ft_strjoin_with_free(char *s1, char *s2)
+{
+	char	*new_str;
+	size_t	i;
+	size_t	j;
+
+	new_str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!new_str)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		new_str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		new_str[i + j] = s2[j];
+		j++;
+	}
+	new_str[i + j] = '\0';
+	free(s1);
+	free(s2);
+	return (new_str);
+}

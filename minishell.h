@@ -49,6 +49,9 @@ char	**store_token(char **tokens, char *input, int *count, int start, int i);
 char	**handle_special_chars(char *input, char **tokens, int *i, int *count);
 char	**tokenize_input(char *input);
 
+// quote.c
+void	process_quotes(t_arg *arg);
+
 // built_in.c
 int		ft_echo(t_cmd *cmd, int option);
 int		ft_cd(t_cmd *cmd, t_list **env_list, char ***envp);
@@ -110,5 +113,6 @@ void	free_all(t_arg *arg);
 int		ft_strcmp(const char *s1, const char *s2);
 char	**remove_str_from_array(char **arr, int index);
 t_cmd	*index_cmd(t_list *lst, int index);
+char	*ft_strjoin_with_free(char *s1, char *s2);
 
 #endif
