@@ -35,6 +35,12 @@ static int	print_exec_error(char *arg, char *msg, t_error_type type)
 {
 	if (type == error_redirection)
 		msg = strerror(errno);
+    if (type == error_syntax)
+    {
+        ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
+        ft_putstr_fd(arg, STDERR_FILENO);
+        ft_putstr_fd("'", STDERR_FILENO);
+    }
 	if (type != error_syntax && type != error_max_heredoc)
 	{
 		ft_putstr_fd(arg, STDERR_FILENO);
@@ -46,7 +52,7 @@ static int	print_exec_error(char *arg, char *msg, t_error_type type)
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 	}
-	ft_putstr_fd("\n", 2);
+	ft_putstr_fd("\n", STDERR_FILENO);
 	if (type == error_redirection)
 		exit(EXIT_FAILURE);
 	if (type == error_max_heredoc)
@@ -64,7 +70,12 @@ int	print_error(char *cmd, char *arg, char *msg, t_error_type err_type)
 		perror("error");
 		exit(EXIT_FAILURE);
 	}
-	if (err_type >= error_built_in)
+    if (err_type == error_syntax && !arg)
+    {
+        ft_putstr_fd("syntax error\n", STDERR_FILENO);
+        return (2);
+    }
+	if (err_type >= error_built_in && err_type < invalid_option)
 		return (print_bi_error(cmd, arg, msg, err_type));
 	return (print_exec_error(arg, msg, err_type));
 }

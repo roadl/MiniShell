@@ -3,24 +3,6 @@
 #define READ 0
 #define WRITE 1
 
-void	test_parse(char **strs, t_arg *arg)
-{
-	int		i;
-	t_cmd	*cmd;
-
-	i = 0;
-	while (strs[i])
-	{
-		cmd = (t_cmd *)malloc(sizeof(t_cmd));
-		cmd->argv = ft_split(strs[i], ' ');
-		cmd->cmd = ft_strdup(cmd->argv[0]);
-		cmd->redi_list = NULL;
-		cmd->is_child = 0;
-		ft_lstadd_back(&arg->cmd_list, ft_lstnew(cmd));
-		i++;
-	}
-}
-
 int	exec_cmds(t_arg *arg)
 {
 	t_list	*node;
@@ -60,12 +42,12 @@ int	exec_cmds(t_arg *arg)
 int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
-	char		**strs;
 	t_arg		arg;
+	int			cmd_count;		
 
 	if (argc != 1 || !init_arg(&arg, envp))
 		exit(EXIT_FAILURE);
-	while (1)
+	while (argv[0])
 	{
 		// signal 설정
 		line = readline("fastshell$ ");
@@ -79,18 +61,17 @@ int	main(int argc, char **argv, char **envp)
 			printf("line nothing\n");
 			continue ;
 		}
+		add_history(line);
 		//printf("line: %s\n", line);
 		//print_envp(arg.envp);
 		// 여기서 파싱해서 arg->cmd_list에 들어옴
-		strs = ft_split(line, '|');
-		test_parse(strs, &arg);
+		arg.cmd_list = parsing(line, &cmd_count);
 		//print_cmd_list(arg.cmd_list);
 		exec_cmds(&arg);
 		// set_signal_ignore?
 		// 파싱
 		add_history(line);
 		free(line);
-		free_strs(strs);
 		ft_lstclear(&arg.cmd_list, free_cmd);
 		// 실행
 		// free, unlink

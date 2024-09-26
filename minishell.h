@@ -35,6 +35,19 @@ typedef struct s_redi {
 }	t_redi;
 
 
+// parse.c
+t_list	*allocate_cmds(int cmd_count);
+void	store_redirection(t_list **redi_list, t_list **last_redi, char **tokens, int *token_index);
+void	process_tokens(char **tokens, t_cmd *cmd);
+t_list	*parsing(char *input, int *cmd_count);
+
+// tokenize.c
+char	**allocate_tokens(char *input);
+void	handle_quotes(char *input, int *i, char quote);
+char	**store_token(char **tokens, char *input, int *count, int start, int i);
+char	**handle_special_chars(char *input, char **tokens, int *i, int *count);
+char	**tokenize_input(char *input);
+
 // built_in.c
 int		ft_echo(t_cmd *cmd, int option);
 int		ft_cd(t_cmd *cmd, t_list **env_list, char ***envp);
@@ -89,5 +102,8 @@ int		is_only_built_in(t_arg *arg);
 void	free_strs(void *strs);
 void	free_cmd(void *cmd);
 void	free_all(t_arg *arg);
+int		ft_strcmp(const char *s1, const char *s2);
+char	**remove_str_from_array(char **arr, int index);
+t_cmd	*index_cmd(t_list *lst, int index);
 
 #endif
