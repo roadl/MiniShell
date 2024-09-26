@@ -17,13 +17,19 @@ int	exec_cmds(t_arg *arg)
 	while (node)
 	{
 		cmd = node->content;
-		if (node != arg->cmd_list)
+		if (node == arg->cmd_list)
+			cmd->read_fd = STDIN_FILENO;
+		else
+		{
 			cmd->read_fd = fd[READ];
-		close(fd[WRITE]);
+			close(fd[WRITE]);
+		}
 		if (node->next && pipe(fd) == -1)
 			handle_systemcall_error();
 		if (node->next)
 			cmd->write_fd = fd[WRITE];
+		else
+			cmd->write_fd = STDOUT_FILENO;
 		pid = run_child_process(arg, fd, node);
 		node = node->next;
 	}
@@ -86,6 +92,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		arg.cmd_list = parsing(line, &cmd_count);
+		//print_cmd_list(arg.cmd_list);
 		exec_cmds(&arg);
 		free(line);
 		ft_lstclear(&arg.cmd_list, free_cmd);

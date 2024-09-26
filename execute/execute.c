@@ -6,8 +6,8 @@
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
 	handle_redi(cmd);
-	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
-		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
+	if ((dup2(cmd->read_fd, STDIN_FILENO) == -1) || \
+		(dup2(cmd->write_fd, STDOUT_FILENO) == -1))
 		handle_systemcall_error();
 	if (cmd->read_fd != STDIN_FILENO)
 		close(cmd->read_fd);
@@ -37,6 +37,9 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 	int		res;
 
 	handle_redi(cmd);
+	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
+		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
+		handle_systemcall_error();
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
 		res = ft_echo(cmd, 1);
@@ -81,7 +84,7 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	int		pid;
 
 	cmd = node->content;
-	printf("run_child: %s\n", cmd->cmd);
+	//printf("run_child: %s, %p\n", cmd->cmd, fd);
 	pid = fork();
 	if (pid == -1)
 		handle_systemcall_error();
@@ -89,10 +92,6 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	{
 		if (node->next)
 			close(fd[READ]);
-		else
-			cmd->write_fd = STDOUT_FILENO;
-		if (node == arg->cmd_list)
-			cmd->read_fd = STDIN_FILENO;
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
 		if (is_built_in(cmd->cmd))

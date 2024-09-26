@@ -98,6 +98,7 @@ char	**env_list_to_envp(t_list *lst, char **envp);
 // debug.c
 void	print_strs(char **strs);
 void	print_cmd_list(t_list *lst);
+void	print_redi_list(t_list *lst);
 void	print_envp(char **envp);
 
 // util.c
