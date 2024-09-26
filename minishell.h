@@ -10,6 +10,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <termios.h>
 # include "libft/libft.h"
 
 typedef struct s_arg {

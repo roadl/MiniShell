@@ -36,46 +36,60 @@ int	exec_cmds(t_arg *arg)
 	return (arg->last_exit_code);
 }
 
-// ctrl-C -> new lline
-// ctrl-D -> exit
-// ctrl-\ -> does nothing
+void	handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 1);
+		rl_redisplay();
+	}
+}
+
+void	setting_signal(void)
+{
+	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 // 들어올때 SHLVL 하나 증가시켜야 함
 int	main(int argc, char **argv, char **envp)
 {
-	char		*line;
-	t_arg		arg;
-	int			cmd_count;		
+	char			*line;
+	t_arg			arg;
+	int				cmd_count;
+	struct termios	term;
 
+	(void)argv;
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_lflag &= ~(ECHOCTL);
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	setting_signal();
 	if (argc != 1 || !init_arg(&arg, envp))
 		exit(EXIT_FAILURE);
-	while (argv[0])
+	while (1)
 	{
 		// signal 설정
-		line = readline("fastshell$ ");
+		line = readline("FastSHELL$ ");
 		if (line == NULL)
 		{
-			printf("line null\n");
-			continue ;
+			printf("\033[1A");
+            printf("\033[10C");
+			printf(" exit\n");
+			exit(-1);
 		}
 		if (*line == '\0')
 		{
-			printf("line nothing\n");
+			free(line);
 			continue ;
 		}
 		add_history(line);
-		//printf("line: %s\n", line);
-		//print_envp(arg.envp);
-		// 여기서 파싱해서 arg->cmd_list에 들어옴
 		arg.cmd_list = parsing(line, &cmd_count);
-		//print_cmd_list(arg.cmd_list);
 		exec_cmds(&arg);
-		// set_signal_ignore?
-		// 파싱
-		add_history(line);
 		free(line);
 		ft_lstclear(&arg.cmd_list, free_cmd);
 		// 실행
 		// free, unlink
 	}
-	argv = NULL;
 }

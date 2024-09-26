@@ -104,7 +104,7 @@ int	ft_pwd(t_cmd *cmd)
 {
 	char	*cur;
 
-	cmd = NULL;
+	(void)cmd;
 	cur = getcwd(NULL, 0);
 	if (!cur)
 		handle_systemcall_error();
