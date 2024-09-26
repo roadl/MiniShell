@@ -3,18 +3,16 @@
 #define READ 0
 #define WRITE 1
 
-// void	handle_redi(t_cmd *cmd)
-// {
-	
-// }
-
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
+	handle_redi(cmd);
 	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
 		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
 		handle_systemcall_error();
-	close(cmd->read_fd);
-	close(cmd->write_fd);
+	if (cmd->read_fd != STDIN_FILENO)
+		close(cmd->read_fd);
+	if (cmd->write_fd != STDOUT_FILENO)
+		close(cmd->write_fd);
 	if (ft_strchr(cmd->cmd, '/') == 0)
 	{
 		ft_putstr_fd("fastshell: ", STDERR_FILENO);
@@ -34,10 +32,11 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 	return ;
 }
 
-int	exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp)
+int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 {
 	int		res;
 
+	handle_redi(cmd);
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
 		res = ft_echo(cmd, 1);
@@ -53,10 +52,14 @@ int	exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp)
 		res = ft_env(cmd, envp);
 	if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
 		res = ft_exit(cmd);
+	if (dup2(STDIN_FILENO, arg->origin_stdin) == -1)
+		handle_systemcall_error();
+	if (dup2(STDOUT_FILENO, arg->origin_stdout) == -1)
+		handle_systemcall_error();
 	return (res);
 }
 
-int	exec_built_in_child(t_cmd *cmd, char **envp)
+int	exec_built_in_child(t_cmd *cmd, t_arg *arg, char **envp)
 {
 	t_list	*env_list;
 	char	**new_envp;
@@ -66,7 +69,7 @@ int	exec_built_in_child(t_cmd *cmd, char **envp)
 	new_envp = NULL;
 	init_env_list(&env_list, envp);
 	new_envp = env_list_to_envp(env_list, new_envp);
-	res = exec_built_in(cmd, &env_list, &new_envp);
+	res = exec_built_in(cmd, arg, &env_list, &new_envp);
 	ft_lstclear(&env_list, free);
 	free_strs(new_envp);
 	exit(res);
@@ -87,14 +90,13 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 		if (node->next)
 			close(fd[READ]);
 		else
-			cmd->write_fd = open("outfile", \
-				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			cmd->write_fd = STDOUT_FILENO;
 		if (node == arg->cmd_list)
-			cmd->read_fd = open("infile", O_RDONLY);
+			cmd->read_fd = STDIN_FILENO;
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
 		if (is_built_in(cmd->cmd))
-			exec_built_in_child(cmd, arg->envp);
+			exec_built_in_child(cmd, arg, arg->envp);
 		else
 			execute_command(arg, cmd);
 	}

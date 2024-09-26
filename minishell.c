@@ -13,7 +13,7 @@ int	exec_cmds(t_arg *arg)
 
 	node = arg->cmd_list;
 	if (is_only_built_in(arg))
-		return (exec_built_in(node->content, &arg->env_list, &arg->envp));
+		return (exec_built_in(node->content, arg, &arg->env_list, &arg->envp));
 	while (node)
 	{
 		cmd = node->content;
@@ -32,6 +32,7 @@ int	exec_cmds(t_arg *arg)
 		arg->last_exit_code = WEXITSTATUS(status);
 	else
 		arg->last_exit_code = 128 + WTERMSIG(status);
+	wait(0);
 	return (arg->last_exit_code);
 }
 

@@ -83,8 +83,11 @@ void	handle_systemcall_error(void);
 int		print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 
 // execute.c
-int		exec_built_in(t_cmd *cmd, t_list **env_list, char ***envp);
+int		exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp);
 int		run_child_process(t_arg *arg, int *fd, t_list *node);
+
+// redi.c
+void	handle_redi(t_cmd *cmd);
 
 // init.c
 int		init_arg(t_arg *arg, char **envp);

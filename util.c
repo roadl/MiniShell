@@ -42,40 +42,33 @@ void	free_strs(void *_strs)
 	free(strs);
 }
 
+void	free_redi(void *_redi)
+{
+	t_redi	*redi;
+
+	redi = _redi;
+	free(redi->redi);
+	free(redi->file);
+}
+
 void	free_cmd(void *_cmd)
 {
 	t_cmd	*cmd;
 	int		i;
 
 	cmd = _cmd;
-	// printf("free cmd: %p\n", cmd->cmd);
 	free(cmd->cmd);
 	i = 0;
 	if (cmd->argv)
 	{
 		while (cmd->argv[i])
 		{
-			// printf("free argv[%d]: %p\n", i, cmd->argv[i]);
 			free(cmd->argv[i]);
 			i++;
 		}
-		// printf("free argv: %p\n", cmd->argv);
 		free(cmd->argv);
 	}
-	// printf("free redi_list: %p\n", cmd->redi_list);
-	// if (cmd->redi_list)
-		// ft_lstclear(&cmd->redi_list, free);
-	// printf("free: %p\n", cmd);
+	if (cmd->redi_list)
+		ft_lstclear(&cmd->redi_list, free_redi);
 	free(cmd);
-}
-
-void	free_all(t_arg *arg)
-{
-	int	i;
-
-	i = 0;
-	if (arg->env_list)
-		ft_lstclear(&arg->env_list, free);
-	if (arg->cmd_list)
-		ft_lstclear(&arg->cmd_list, free_cmd);
 }

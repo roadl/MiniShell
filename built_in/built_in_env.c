@@ -87,7 +87,8 @@ int	ft_env(t_cmd *cmd, char ***envp)
 
 	_envp = *envp;
 	if (cmd->argv[1])
-		return (print_error("env", cmd->argv[1], strerror(ENOENT), error_built_in));
+		return (print_error("env", cmd->argv[1], \
+			strerror(ENOENT), error_built_in));
 	i = 0;
 	while (_envp[i])
 	{
