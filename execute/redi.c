@@ -58,10 +58,11 @@ void	handle_here_doc(t_cmd *cmd)
 				handle_systemcall_error();
 			while (1)
 			{
-				line = readline(">");
-				if (ft_strncmp(line, redi->file, ft_strlen(line)) != 0)
+				line = readline("> ");
+				if (ft_strncmp(line, redi->file, ft_strlen(line)) == 0)
 					break ;
 				ft_putstr_fd(line, cmd->read_fd);
+				ft_putstr_fd("\n", cmd->read_fd);
 			}
 		}
 		node = node->next;
@@ -75,6 +76,13 @@ void	handle_redi(t_cmd *cmd)
 
 	handle_here_doc(cmd);
 	node = cmd->redi_list;
+	if (cmd->read_fd != STDIN_FILENO)
+	{
+		close(cmd->read_fd);
+		cmd->read_fd = open(".temp", O_RDONLY);
+		if (cmd->read_fd < 0)
+			handle_systemcall_error();
+	}
 	while (node)
 	{
 		redi = node->content;
