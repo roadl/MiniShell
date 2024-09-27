@@ -6,6 +6,8 @@
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
 	handle_redi(cmd);
+	if (!cmd->cmd)
+		exit(EXIT_SUCCESS);
 	if ((dup2(cmd->read_fd, STDIN_FILENO) == -1) || \
 		(dup2(cmd->write_fd, STDOUT_FILENO) == -1))
 		handle_systemcall_error();
@@ -98,7 +100,7 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 			close(fd[READ]);
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
-		if (is_built_in(cmd->cmd))
+		else if (is_built_in(cmd->cmd))
 			exec_built_in_child(cmd, arg, arg->envp);
 		else
 			execute_command(arg, cmd);

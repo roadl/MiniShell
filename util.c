@@ -2,6 +2,8 @@
 
 int	is_built_in(char *cmd)
 {
+	if (!cmd)
+		return (0);
 	if (ft_strncmp(cmd, "echo", 5) == 0)
 		return (1);
 	if (ft_strncmp(cmd, "cd", 3) == 0)
