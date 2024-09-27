@@ -73,6 +73,8 @@ t_list *parsing(char *input, int *cmd_count)
 			token_index++;
 		}
 		t_cmd *cmd = (t_cmd *)index_cmd(cmds, i);
+		cmd->read_fd = STDIN_FILENO;
+		cmd->write_fd = STDOUT_FILENO;
 		cmd->redi_list = redi_list;
 		process_tokens(tokens, cmd);
 		for (int j = 0; tokens[j]; j++)

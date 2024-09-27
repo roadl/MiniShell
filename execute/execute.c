@@ -40,6 +40,10 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
 		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
 		handle_systemcall_error();
+	if (cmd->read_fd != STDIN_FILENO)
+		close(cmd->read_fd);
+	if (cmd->write_fd != STDOUT_FILENO)
+		close(cmd->write_fd);
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
 		res = ft_echo(cmd, 1);
@@ -55,9 +59,9 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 		res = ft_env(cmd, envp);
 	if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
 		res = ft_exit(cmd);
-	if (dup2(STDIN_FILENO, arg->origin_stdin) == -1)
+	if (dup2(arg->origin_stdin, STDIN_FILENO) == -1)
 		handle_systemcall_error();
-	if (dup2(STDOUT_FILENO, arg->origin_stdout) == -1)
+	if (dup2(arg->origin_stdout, STDOUT_FILENO) == -1)
 		handle_systemcall_error();
 	return (res);
 }

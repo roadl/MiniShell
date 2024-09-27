@@ -72,7 +72,6 @@ void	handle_redi(t_cmd *cmd)
 {
 	t_list	*node;
 	t_redi	*redi;
-	t_redi	*temp;
 
 	handle_here_doc(cmd);
 	node = cmd->redi_list;
@@ -86,7 +85,6 @@ void	handle_redi(t_cmd *cmd)
 				WRITE, cmd);
 		else if (ft_strncmp(redi->redi, ">>", 2) == 0)
 			open_file(redi->file, O_WRONLY | O_CREAT | O_APPEND, WRITE, cmd);
-		temp = redi;
 		node = node->next;
 	}
 	if (cmd->read_fd == -1)
