@@ -93,6 +93,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		arg.cmd_list = parsing(line, &cmd_count);
 		process_quotes(&arg);
+		make_cmd(&arg);
 		//print_cmd_list(arg.cmd_list);
 		exec_cmds(&arg);
 		free(line);
