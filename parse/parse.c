@@ -9,8 +9,8 @@ t_list *allocate_cmds(int cmd_count)
 		t_cmd *cmd = (t_cmd *)malloc(sizeof(t_cmd));
 		cmd->cmd = NULL;
 		cmd->argv = NULL;
-		cmd->read_fd = -1;
-		cmd->write_fd = -1;
+		cmd->read_fd = STDIN_FILENO;
+		cmd->write_fd = STDOUT_FILENO;
 		cmd->redi_list = NULL;
 		t_list *new_node = ft_lstnew(cmd);
 		ft_lstadd_back(&cmds, new_node);
