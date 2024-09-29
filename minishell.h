@@ -84,6 +84,7 @@ int		check_echo_option(t_cmd *cmd);
 // env.c
 int		update_env(char *str, t_list **env_list, char ***envp);
 int		unset_env(char *key, t_list **env_list, char ***envp);
+char	*get_shlvl(t_arg *arg);
 t_list	*find_env(const char *key, t_list *env_list);
 
 char	*get_env_key(t_list *node);

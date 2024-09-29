@@ -51,6 +51,7 @@ void	free_redi(void *_redi)
 	redi = _redi;
 	free(redi->redi);
 	free(redi->file);
+	free(redi);
 }
 
 void	free_cmd(void *_cmd)

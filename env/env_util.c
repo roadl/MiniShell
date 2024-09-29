@@ -38,3 +38,18 @@ char	*get_env_value(t_list *node)
 		handle_systemcall_error();
 	return (value);
 }
+
+char	*get_shlvl(t_arg *arg)
+{
+	t_list	*node;
+	char	*value;
+
+	node = find_env("SHLVL", arg->env_list);
+	if (!node)
+		value = ft_strdup("0");
+	else
+		value = get_env_value(node);
+	if (!value)
+		handle_systemcall_error();
+	return (value);
+}
