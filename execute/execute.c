@@ -7,13 +7,7 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 {
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
-	if ((dup2(cmd->read_fd, STDIN_FILENO) == -1) || \
-		(dup2(cmd->write_fd, STDOUT_FILENO) == -1))
-		handle_systemcall_error();
-	if (cmd->read_fd != STDIN_FILENO)
-		close(cmd->read_fd);
-	if (cmd->write_fd != STDOUT_FILENO)
-		close(cmd->write_fd);
+	dup_fd(cmd);
 	if (ft_strchr(cmd->cmd, '/') == 0)
 	{
 		ft_putstr_fd("fastshell: ", STDERR_FILENO);
@@ -37,13 +31,7 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 {
 	int		res;
 
-	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
-		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
-		handle_systemcall_error();
-	if (cmd->read_fd != STDIN_FILENO)
-		close(cmd->read_fd);
-	if (cmd->write_fd != STDOUT_FILENO)
-		close(cmd->write_fd);
+	dup_fd(cmd);
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
 		res = ft_echo(cmd);
@@ -112,7 +100,6 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 int	exec_cmds(t_arg *arg)
 {
 	t_list	*node;
-	t_cmd	*cmd;
 	int		fd[2];
 	int		l_pid;
 	int		f_pid;
@@ -123,20 +110,7 @@ int	exec_cmds(t_arg *arg)
 		return (exec_built_in(node->content, arg, &arg->env_list, &arg->envp));
 	while (node)
 	{
-		cmd = node->content;
-		if (node == arg->cmd_list)
-			cmd->read_fd = STDIN_FILENO;
-		else
-		{
-			cmd->read_fd = fd[READ];
-			close(fd[WRITE]);
-		}
-		if (node->next && pipe(fd) == -1)
-			handle_systemcall_error();
-		if (node->next)
-			cmd->write_fd = fd[WRITE];
-		else
-			cmd->write_fd = STDOUT_FILENO;
+		set_fd(arg, node->content, node, fd);
 		if (node == arg->cmd_list)
 			f_pid = run_child_process(arg, fd, node);
 		else

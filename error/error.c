@@ -70,11 +70,11 @@ int	print_error(char *cmd, char *arg, char *msg, t_error_type err_type)
 		perror("error");
 		exit(EXIT_FAILURE);
 	}
-    if (err_type == error_syntax && !arg)
-    {
-        ft_putstr_fd("syntax error\n", STDERR_FILENO);
-        return (2);
-    }
+	if (err_type == error_syntax && !arg)
+	{
+		ft_putstr_fd("syntax error\n", STDERR_FILENO);
+		return (2);
+	}
 	if (err_type >= error_built_in && err_type <= invalid_option)
 		return (print_bi_error(cmd, arg, msg, err_type));
 	return (print_exec_error(arg, msg, err_type));
