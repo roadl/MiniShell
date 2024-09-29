@@ -31,7 +31,10 @@ void	store_redirection(t_list **redi_list, char **tokens, int *token_index)
 		handle_systemcall_error();
 	redi->redi = ft_strdup(tokens[*token_index]);
 	(*token_index)++;
-	redi->file = ft_strdup(tokens[*token_index]);
+	if (tokens[*token_index])
+		redi->file = ft_strdup(tokens[*token_index]);
+	else
+		redi->file = ft_strdup("");
 	if (!redi->redi || !redi->file)
 		handle_systemcall_error();
 	ft_lstadd_back(redi_list, ft_lstnew(redi));
@@ -102,6 +105,11 @@ t_list *parsing(char *input, int *cmd_count)
 		ft_lstclear(&cmds, free_cmd);
 		if (tokens)
 			print_error("fastshell", NULL, "|", error_syntax);
+		return NULL;
+	}
+	if (check_redi_error(cmds))
+	{
+		ft_lstclear(&cmds, free_cmd);
 		return NULL;
 	}
 	return cmds;

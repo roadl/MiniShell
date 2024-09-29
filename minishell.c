@@ -36,10 +36,9 @@ int	main(int argc, char **argv, char **envp)
 			arg.last_exit_code = 258;
 			continue ;
 		}
-		printf("hi\n");
 		process_quotes(&arg);
 		make_cmd(&arg);
-		// print_cmd_list(arg.cmd_list);
+		//print_cmd_list(arg.cmd_list);
 		set_signal_fork();
 		exec_cmds(&arg);
 		free(line);

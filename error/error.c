@@ -37,7 +37,7 @@ static int	print_exec_error(char *arg, char *msg, t_error_type type)
 		msg = strerror(errno);
 	if (type == error_syntax)
 	{
-		ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
+		ft_putstr_fd("parse error near unexpected token `", STDERR_FILENO);
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd("'", STDERR_FILENO);
 	}

@@ -61,6 +61,10 @@ void	make_cmd(t_arg *arg);
 int		is_allowed_char(char c);
 int		count_pipe(char *input);
 int     is_cmd_empty(t_cmd *cmd);
+int		is_redi_error(t_cmd *cmd);
+
+// parse_error.c
+int		check_redi_error(t_list *cmd_list);
 
 // built_in.c
 int		ft_echo(t_cmd *cmd);

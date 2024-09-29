@@ -33,3 +33,28 @@ int	is_cmd_empty(t_cmd *cmd)
 		return (1);
 	return (0);
 }
+
+int	is_redi_error(t_cmd *cmd)
+{
+	t_list	*node;
+	t_redi	*redi;
+
+	node = cmd->redi_list;
+	while (node)
+	{
+		redi = node->content;
+		if (!redi->file || !ft_strlen(redi->file))
+		{
+			print_error("fastshell", NULL, "\\n", error_syntax);
+			return (1);
+		}
+		else if (!ft_strcmp(redi->redi, ">") || !ft_strcmp(redi->redi, ">>")
+			|| !ft_strcmp(redi->redi, "<") || !ft_strcmp(redi->redi, "<<"))
+		{
+			print_error("fastshell", NULL, redi->redi, error_syntax);
+			return (1);
+		}
+		node = node->next;
+	}
+	return (0);
+}
