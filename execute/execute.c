@@ -7,6 +7,8 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 {
 	if (handle_redi(cmd) == -1)
 		exit(EXIT_FAILURE);
+	set_signal_origin();
+	set_terminal_print_on();
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
 	dup_fd(cmd);
@@ -89,8 +91,6 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 			close(fd[READ]);
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
-		set_signal_origin();
-		set_terminal_print_on();
 		if (is_built_in(cmd->cmd))
 			exec_built_in_child(cmd, arg, arg->envp);
 		else
