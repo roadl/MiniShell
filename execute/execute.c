@@ -5,7 +5,6 @@
 
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
-	handle_redi(cmd);
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
 	if ((dup2(cmd->read_fd, STDIN_FILENO) == -1) || \
@@ -38,7 +37,6 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 {
 	int		res;
 
-	handle_redi(cmd);
 	if (dup2(cmd->read_fd, STDIN_FILENO) == -1 || \
 		dup2(cmd->write_fd, STDOUT_FILENO) == -1)
 		handle_systemcall_error();
@@ -100,10 +98,52 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 			close(fd[READ]);
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
-		else if (is_built_in(cmd->cmd))
+		handle_redi(cmd);
+		set_signal_origin();
+		set_terminal_print_on();
+		if (is_built_in(cmd->cmd))
 			exec_built_in_child(cmd, arg, arg->envp);
 		else
 			execute_command(arg, cmd);
 	}
 	return (pid);
+}
+
+int	exec_cmds(t_arg *arg)
+{
+	t_list	*node;
+	t_cmd	*cmd;
+	int		fd[2];
+	int		pid;
+	int		status;
+
+	node = arg->cmd_list;
+	if (is_only_built_in(arg))
+		return (exec_built_in(node->content, arg, &arg->env_list, &arg->envp));
+	while (node)
+	{
+		cmd = node->content;
+		if (node == arg->cmd_list)
+			cmd->read_fd = STDIN_FILENO;
+		else
+		{
+			cmd->read_fd = fd[READ];
+			close(fd[WRITE]);
+		}
+		if (node->next && pipe(fd) == -1)
+			handle_systemcall_error();
+		if (node->next)
+			cmd->write_fd = fd[WRITE];
+		else
+			cmd->write_fd = STDOUT_FILENO;
+		pid = run_child_process(arg, fd, node);
+		node = node->next;
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		arg->last_exit_code = WEXITSTATUS(status);
+	else
+		arg->last_exit_code = 128 + WTERMSIG(status);
+	wait(0);
+	return (arg->last_exit_code);
 }

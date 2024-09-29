@@ -100,6 +100,7 @@ int		print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 // execute.c
 int		exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp);
 int		run_child_process(t_arg *arg, int *fd, t_list *node);
+int		exec_cmds(t_arg *arg);
 
 // redi.c
 void	handle_redi(t_cmd *cmd);
@@ -125,5 +126,17 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	**remove_str_from_array(char **arr, int index);
 t_cmd	*index_cmd(t_list *lst, int index);
 char	*ft_strjoin_with_free(char *s1, char *s2);
+
+// signal.c
+void	set_signal(void);
+void	set_signal_fork(void);
+void	set_signal_origin(void);
+void	set_signal_heredoc(void);
+void	do_sigint_heredoc(int signum);
+void	set_terminal_print_off(void);
+void	set_terminal_print_on(void);
+void	do_sigint(int signum);
+void	do_sigterm(void);
+void	check_fork_signal(int statloc);
 
 #endif

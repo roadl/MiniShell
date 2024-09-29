@@ -6,7 +6,7 @@
 #    By: yojin <yojin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:18:23 by yojin             #+#    #+#              #
-#    Updated: 2024/09/29 14:07:38 by yojin            ###   ########.fr        #
+#    Updated: 2024/09/29 14:52:17 by yojin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c built_in/built_in
 	execute/execute.c execute/redi.c env/env.c env/env_util.c \
 	error/error.c init/init.c debug/debug.c util.c util2.c \
 	parse/parse.c parse/tokenize.c parse/quote.c parse/cmd.c \
-	parse/parse_util.c
+	parse/parse_util.c signal/signal.c signal/signal2.c
 # LINKING_FLAGS = -lreadline -L${HOME}/.brew/opt/readline/lib
 # COMFILE_FLAGS = -I${HOME}/.brew/opt/readline/include
 LINKING_FLAGS = -lreadline -L/opt/homebrew/opt/readline/lib

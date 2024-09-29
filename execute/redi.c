@@ -75,6 +75,7 @@ void	handle_redi(t_cmd *cmd)
 	t_list	*node;
 	t_redi	*redi;
 
+	set_signal_heredoc();
 	handle_here_doc(cmd);
 	node = cmd->redi_list;
 	if (cmd->here_doc)
