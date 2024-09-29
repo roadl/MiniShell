@@ -32,6 +32,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (*line == '\0')
 		{
+			g_exit_code = 0;
 			free(line);
 			continue ;
 		}
