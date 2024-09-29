@@ -40,7 +40,7 @@ typedef struct s_redi {
 
 // parse.c
 t_list	*allocate_cmds(int cmd_count);
-void	store_redirection(t_list **redi_list, t_list **last_redi, char **tokens, int *token_index);
+void	store_redirection(t_list **redi_list, char **tokens, int *token_index);
 void	process_tokens(char **tokens, t_cmd *cmd);
 t_list	*parsing(char *input, int *cmd_count);
 
@@ -53,6 +53,12 @@ char	**tokenize_input(char *input);
 
 // quote.c
 void	process_quotes(t_arg *arg);
+
+// cmd.c
+void	make_cmd(t_arg *arg);
+
+// parse_util.c
+int	is_allowed_char(char c);
 
 // built_in.c
 int		ft_echo(t_cmd *cmd);

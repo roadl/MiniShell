@@ -92,6 +92,14 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		arg.cmd_list = parsing(line, &cmd_count);
+		if (!arg.cmd_list)
+		{
+			free(line);
+			arg.last_exit_code = 258;
+			continue ;
+		}
+		process_quotes(&arg);
+		make_cmd(&arg);
 		//print_cmd_list(arg.cmd_list);
 		exec_cmds(&arg);
 		free(line);

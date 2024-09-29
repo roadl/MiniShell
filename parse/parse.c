@@ -1,72 +1,82 @@
 #include "minishell.h"
 
-t_list *allocate_cmds(int cmd_count)
+t_list	*allocate_cmds(int cmd_count)
 {
-	t_list *cmds = NULL;
+	t_list	*cmds;
+	t_cmd	*cmd;
 
-	for (int i = 0; i < cmd_count; i++)
+	cmds = NULL;
+	while (cmd_count--)
 	{
-		t_cmd *cmd = (t_cmd *)malloc(sizeof(t_cmd));
+		cmd = (t_cmd *)malloc(sizeof(t_cmd));
 		cmd->cmd = NULL;
 		cmd->argv = NULL;
-		cmd->read_fd = -1;
-		cmd->write_fd = -1;
+		cmd->read_fd = STDIN_FILENO;
+		cmd->write_fd = STDOUT_FILENO;
 		cmd->redi_list = NULL;
-		t_list *new_node = ft_lstnew(cmd);
-		ft_lstadd_back(&cmds, new_node);
+		ft_lstadd_back(&cmds, ft_lstnew(cmd));
 	}
-	return cmds;
+	return (cmds);
 }
 
-void store_redirection(t_list **redi_list, t_list **last_redi, char **tokens, int *token_index)
+void	store_redirection(t_list **redi_list, char **tokens, int *token_index)
 {
-	t_redi *redi = (t_redi *)malloc(sizeof(t_redi));
+	t_redi	*redi;
+
+	redi = (t_redi *)malloc(sizeof(t_redi));
 	redi->redi = ft_strdup(tokens[*token_index]);
 	(*token_index)++;
 	redi->file = ft_strdup(tokens[*token_index]);
-	t_list *new_node = ft_lstnew(redi);
-	if (!(*redi_list))
-		*redi_list = new_node;
-	else
-		(*last_redi)->next = new_node;
-	*last_redi = new_node;
+	ft_lstadd_back(redi_list, ft_lstnew(redi));
 }
 
-void process_tokens(char **tokens, t_cmd *cmd)
+void	process_tokens(char **tokens, t_cmd *cmd)
 {
-	int token_index = 0;
-	int argc = 0;
+	int	argc;
+	int	i;
+
+	argc = 0;
 	while (tokens[argc])
 		argc++;
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
-	for (int j = 0; tokens[j]; j++)
+	i = 0;
+	while (i < argc)
 	{
-		if (j == token_index)
-			cmd->cmd = strdup(tokens[j]);
-		cmd->argv[j - token_index] = strdup(tokens[j]);
+		if (i == 0)
+			cmd->cmd = strdup(tokens[i]);
+		cmd->argv[i] = strdup(tokens[i]);
+		i++;
 	}
 	cmd->argv[argc] = NULL;
 }
 
 t_list *parsing(char *input, int *cmd_count)
 {
-	char **pipe_segments = ft_split(input, '|');
+	char	**pipe_segments;
+	t_list	*cmds;
+	
+	pipe_segments = ft_split(input, '|');
 	*cmd_count = 0;
 	while (pipe_segments[*cmd_count])
 		(*cmd_count)++;
-	t_list *cmds = allocate_cmds(*cmd_count);
+	cmds = allocate_cmds(*cmd_count);
 	for (int i = 0; i < *cmd_count; i++)
 	{
 		char **tokens = tokenize_input(pipe_segments[i]);
-		t_list *redi_list = NULL, *last_redi = NULL;
+		t_list *redi_list = NULL;
 		int token_index = 0;
 
+		if (!tokens)
+		{
+			ft_lstclear(&cmds, free_cmd);
+			return NULL;
+		}
 		while (tokens[token_index])
 		{
 			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0 ||
 				strcmp(tokens[token_index], ">>") == 0 || strcmp(tokens[token_index], "<<") == 0)
 			{
-				store_redirection(&redi_list, &last_redi, tokens, &token_index);
+				store_redirection(&redi_list, tokens, &token_index);
 				tokens = remove_str_from_array(tokens, --token_index);
 				tokens = remove_str_from_array(tokens, token_index--);
 			}
