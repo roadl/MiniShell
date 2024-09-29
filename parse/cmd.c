@@ -24,7 +24,7 @@ static char	*get_cmd(char *cmd, char *path)
 		i++;
 	}
 	free_strs(path_list);
-	return (NULL);
+	return (ft_strdup(cmd));
 }
 
 void	make_cmd(t_arg *arg)
@@ -50,12 +50,10 @@ void	make_cmd(t_arg *arg)
 		}
 		if (ft_strchr(cmd->cmd, '/') == 0)
 		{
-			cmd_path = get_cmd(cmd->cmd, get_env_value(find_env("PATH", arg->env_list)));
+			cmd_path = get_cmd(cmd->cmd, \
+				get_env_value(find_env("PATH", arg->env_list)));
 			if (!cmd_path)
-			{
-				print_error(cmd->cmd, NULL, "command not found", error_systemcall);
-				arg->last_exit_code = 127;
-			}
+				handle_systemcall_error();
 			free(cmd->cmd);
 			cmd->cmd = cmd_path;
 		}

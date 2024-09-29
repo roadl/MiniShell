@@ -15,6 +15,7 @@ t_list	*allocate_cmds(int cmd_count)
 		cmd->argv = NULL;
 		cmd->read_fd = STDIN_FILENO;
 		cmd->write_fd = STDOUT_FILENO;
+		cmd->here_doc = 0;
 		cmd->redi_list = NULL;
 		ft_lstadd_back(&cmds, ft_lstnew(cmd));
 	}
