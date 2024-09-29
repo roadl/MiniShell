@@ -66,6 +66,11 @@ t_list *parsing(char *input, int *cmd_count)
 		t_list *redi_list = NULL;
 		int token_index = 0;
 
+		if (!tokens)
+		{
+			ft_lstclear(&cmds, free_cmd);
+			return NULL;
+		}
 		while (tokens[token_index])
 		{
 			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0 ||

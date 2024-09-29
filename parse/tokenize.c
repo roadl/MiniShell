@@ -55,6 +55,11 @@ char	**tokenize_input(char *input)
 
 	while (input[i])
 	{
+		if (!is_allowed_char(input[i]))
+		{
+			print_error("fastshell", NULL, "syntax error", error_syntax);
+			return (NULL);
+		}
 		if (input[i] == '\'' || input[i] == '"')
 			handle_quotes(input, &i, input[i]);
 		if (input[i] == ' ' || input[i] == '\t' || input[i] == '|'

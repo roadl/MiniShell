@@ -55,6 +55,9 @@ void	process_quotes(t_arg *arg);
 // cmd.c
 void	make_cmd(t_arg *arg);
 
+// parse_util.c
+int	is_allowed_char(char c);
+
 // built_in.c
 int		ft_echo(t_cmd *cmd, int option);
 int		ft_cd(t_cmd *cmd, t_list **env_list, char ***envp);
