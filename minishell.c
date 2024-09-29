@@ -45,7 +45,13 @@ int	main(int argc, char **argv, char **envp)
 		}
 		process_quotes(&arg);
 		make_cmd(&arg);
-		print_cmd_list(arg.cmd_list);
+		if (cmd_count == 1 && is_cmd_empty(index_cmd(arg.cmd_list, 0)))
+		{
+			ft_lstclear(&arg.cmd_list, free_cmd);
+			free(line);
+			continue ;
+		}
+		//print_cmd_list(arg.cmd_list);
 		set_signal_fork();
 		g_exit_code = exec_cmds(&arg);
 		free(line);

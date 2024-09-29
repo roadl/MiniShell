@@ -100,7 +100,7 @@ t_list *parsing(char *input, int *cmd_count)
 		free_strs(tokens);
 	}
 	free_strs(pipe_segments);
-	if (is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
+	if (*cmd_count != 1 && is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
 	{
 		ft_lstclear(&cmds, free_cmd);
 		if (tokens)
