@@ -34,6 +34,7 @@ void	make_cmd(t_arg *arg)
 	t_list	*node;
 	t_cmd	*cmd;
 	char	*cmd_path;
+	char	*path;
 
 	node = arg->cmd_list;
 	while (node)
@@ -46,8 +47,9 @@ void	make_cmd(t_arg *arg)
 		}
 		if (ft_strchr(cmd->cmd, '/') == 0)
 		{
-			cmd_path = get_cmd(cmd->cmd, \
-				get_env_value(find_env("PATH", arg->env_list)));
+			path = get_env_value(find_env("PATH", arg->env_list));
+			cmd_path = get_cmd(cmd->cmd, path);
+			free(path);
 			if (!cmd_path)
 				handle_systemcall_error();
 			free(cmd->cmd);

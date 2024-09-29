@@ -44,7 +44,7 @@ int	main(int argc, char **argv, char **envp)
 			arg.last_exit_code = 258;
 			continue ;
 		}
-		process_quotes(&arg);
+		//process_quotes(&arg);
 		make_cmd(&arg);
 		if (cmd_count == 1 && is_cmd_empty(index_cmd(arg.cmd_list, 0)))
 		{
@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		//print_cmd_list(arg.cmd_list);
 		set_signal_fork();
-		g_exit_code = exec_cmds(&arg);
+		//g_exit_code = exec_cmds(&arg);
 		free(line);
 		ft_lstclear(&arg.cmd_list, free_cmd);
 	}
