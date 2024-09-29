@@ -37,7 +37,6 @@ typedef struct s_redi {
 	char	*file;
 }	t_redi;
 
-
 // parse.c
 t_list	*allocate_cmds(int cmd_count);
 void	store_redirection(t_list **redi_list, char **tokens, int *token_index);
@@ -58,7 +57,7 @@ void	process_quotes(t_arg *arg);
 void	make_cmd(t_arg *arg);
 
 // parse_util.c
-int	is_allowed_char(char c);
+int		is_allowed_char(char c);
 
 // built_in.c
 int		ft_echo(t_cmd *cmd);

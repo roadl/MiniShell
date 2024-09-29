@@ -27,8 +27,8 @@ char	*get_env_value(t_list *node)
 	char	*value;
 	char	*temp;
 
-    if (!node)
-        return (NULL);
+	if (!node)
+		return (NULL);
 	temp = ft_strchr(node->content, '=');
 	if (!temp)
 		return (NULL);

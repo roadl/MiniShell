@@ -81,7 +81,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line == NULL)
 		{
 			printf("\033[1A");
-            printf("\033[10C");
+			printf("\033[10C");
 			printf(" exit\n");
 			exit(EXIT_SUCCESS);
 		}
