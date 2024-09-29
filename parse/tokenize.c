@@ -6,7 +6,7 @@ char	**allocate_tokens(char *input)
 
 	tokens = (char **)malloc(sizeof(char *) * (ft_strlen(input) + 1));
 	if (!tokens)
-		return (NULL);
+		handle_systemcall_error();
 	return (tokens);
 }
 
@@ -53,11 +53,17 @@ char	**tokenize_input(char *input)
 	char	**tokens = allocate_tokens(input);
 	int 	i = 0, start = 0, count = 0;
 
+	if (!input)
+	{
+		*tokens = NULL;
+		return (tokens);
+	}
 	while (input[i])
 	{
 		if (!is_allowed_char(input[i]))
 		{
-			print_error("fastshell", NULL, "syntax error", error_syntax);
+			print_error("fastshell", NULL, &input[i], error_syntax);
+			free_strs(tokens);
 			return (NULL);
 		}
 		if (input[i] == '\'' || input[i] == '"')

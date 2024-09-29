@@ -56,6 +56,8 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 		if (i == 0)
 			cmd->cmd = strdup(tokens[i]);
 		cmd->argv[i] = strdup(tokens[i]);
+		if (!cmd->argv[i])
+			handle_systemcall_error();
 		i++;
 	}
 	cmd->argv[argc] = NULL;
@@ -65,23 +67,19 @@ t_list *parsing(char *input, int *cmd_count)
 {
 	char	**pipe_segments;
 	t_list	*cmds;
+	char	**tokens;
 	
 	pipe_segments = ft_split(input, '|');
-	*cmd_count = 0;
-	while (pipe_segments[*cmd_count])
-		(*cmd_count)++;
+	*cmd_count = count_pipe(input) + 1;
 	cmds = allocate_cmds(*cmd_count);
 	for (int i = 0; i < *cmd_count; i++)
 	{
-		char **tokens = tokenize_input(pipe_segments[i]);
+		tokens = tokenize_input(pipe_segments[i]);
 		t_list *redi_list = NULL;
 		int token_index = 0;
 
-		if (!tokens)
-		{
-			ft_lstclear(&cmds, free_cmd);
-			return NULL;
-		}
+		if (!tokens || !(*tokens))
+			break ;
 		while (tokens[token_index])
 		{
 			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0 ||
@@ -98,10 +96,14 @@ t_list *parsing(char *input, int *cmd_count)
 		process_tokens(tokens, cmd);
 		free_strs(tokens);
 	}
-	for (int i = 0; pipe_segments[i]; i++)
-		free(pipe_segments[i]);
-	free(pipe_segments);
-
+	free_strs(pipe_segments);
+	if (is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
+	{
+		ft_lstclear(&cmds, free_cmd);
+		if (tokens)
+			print_error("fastshell", NULL, "|", error_syntax);
+		return NULL;
+	}
 	return cmds;
 }
 
