@@ -3,28 +3,6 @@
 #define READ 0
 #define WRITE 1
 
-// static void	print_fd_status(int fd)
-// {
-// 	int flags = fcntl(fd, F_GETFL);
-
-// 	printf("fd: %d: ", fd);
-//     if (flags == -1) {
-//         printf("Error getting flags\n");
-//         return ;
-//     }
-
-//     // 상태 출력
-//     if (flags & O_RDONLY) {
-//         printf("The file descriptor is opened in read-only mode.\n");
-//     }
-//     if (flags & O_WRONLY) {
-//         printf("The file descriptor is opened in write-only mode.\n");
-//     }
-//     if (flags & O_RDWR) {
-//         printf("The file descriptor is opened in read-write mode.\n");
-//     }
-// }
-
 static int	open_file(char *file, int option, int type, t_cmd *cmd)
 {
 	if (type == READ && cmd->read_fd != STDIN_FILENO)
@@ -65,7 +43,10 @@ static void	do_here_doc(t_cmd *cmd, t_redi *redi)
 			ft_putstr_fd("\033[2C", STDIN_FILENO);
 			break ;
 		}
-		if (ft_strncmp(line, redi->file, ft_strlen(line)) == 0)
+		if (ft_strlen(line) == 0 && ft_strlen(redi->file) == 0)
+			break ;
+		if (ft_strlen(line) != 0 && ft_strlen(line) == ft_strlen(redi->file) && \
+			ft_strncmp(line, redi->file, ft_strlen(redi->file)) == 0)
 			break ;
 		ft_putstr_fd(line, cmd->read_fd);
 		ft_putstr_fd("\n", cmd->read_fd);

@@ -16,21 +16,11 @@ int	check_cd_path(char *path)
 	return (0);
 }
 
-int	check_cd_numeric(char *exit_code)
+static int	check_exit_range(char *exit_code)
 {
 	const char	*long_min = "9223372036854775808";
 	const char	*long_max = "9223372036854775807";
-	int			i;
 
-	i = 0;
-	if (exit_code[i] == '+' || exit_code[i] == '-')
-		i = 1;
-	while (exit_code[i])
-	{
-		if (!ft_isdigit(exit_code[i]))
-			return (0);
-		i++;
-	}
 	if (exit_code[0] == '-' && \
 		ft_strncmp(exit_code + 1, long_min, ft_strlen(long_min)) > 0)
 		return (0);
@@ -38,6 +28,34 @@ int	check_cd_numeric(char *exit_code)
 		exit_code++;
 	if (ft_strncmp(exit_code, long_max, ft_strlen(long_max)) > 0)
 		return (0);
+	return (1);
+}
+
+int	check_exit_numeric(char *arg)
+{
+	char		*exit_code;
+	int			i;
+
+	i = 0;
+	exit_code = ft_strtrim(arg, " ");
+	if (!exit_code)
+		handle_systemcall_error();
+	if (exit_code[i] == '+' || exit_code[i] == '-')
+		i = 1;
+	while (exit_code[i])
+	{
+		if (!ft_isdigit(exit_code[i]))
+		{
+			free(exit_code);
+			return (0);
+		}
+		i++;
+	}
+	if (!check_exit_range(exit_code))
+	{
+		free(exit_code);
+		return (0);
+	}
 	return (1);
 }
 
