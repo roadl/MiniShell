@@ -76,7 +76,6 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	int		pid;
 
 	cmd = node->content;
-	printf("run_child: %s\n", cmd->cmd);
 	pid = fork();
 	if (pid == -1)
 		handle_systemcall_error();

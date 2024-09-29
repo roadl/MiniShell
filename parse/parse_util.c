@@ -48,8 +48,8 @@ int	is_redi_error(t_cmd *cmd)
 			print_error("fastshell", NULL, "\\n", error_syntax);
 			return (1);
 		}
-		else if (!ft_strcmp(redi->redi, ">") || !ft_strcmp(redi->redi, ">>")
-			|| !ft_strcmp(redi->redi, "<") || !ft_strcmp(redi->redi, "<<"))
+		else if (!ft_strcmp(redi->file, ">") || !ft_strcmp(redi->file, ">>")
+			|| !ft_strcmp(redi->file, "<") || !ft_strcmp(redi->file, "<<"))
 		{
 			print_error("fastshell", NULL, redi->redi, error_syntax);
 			return (1);
