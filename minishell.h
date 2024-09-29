@@ -29,6 +29,7 @@ typedef struct s_cmd {
 	char	**argv;
 	int		read_fd;
 	int		write_fd;
+	int		here_doc;
 	t_list	*redi_list;
 }	t_cmd;
 

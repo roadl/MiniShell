@@ -51,6 +51,7 @@ void	handle_here_doc(t_cmd *cmd)
 		redi = node->content;
 		if (ft_strncmp(redi->redi, "<<", 3) == 0)
 		{
+			cmd->here_doc = 1;
 			if (cmd->read_fd != STDIN_FILENO)
 				close(cmd->read_fd);
 			cmd->read_fd = open(".temp", O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -76,7 +77,7 @@ void	handle_redi(t_cmd *cmd)
 
 	handle_here_doc(cmd);
 	node = cmd->redi_list;
-	if (cmd->read_fd != STDIN_FILENO)
+	if (cmd->here_doc)
 	{
 		close(cmd->read_fd);
 		cmd->read_fd = open(".temp", O_RDONLY);
