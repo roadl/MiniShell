@@ -101,6 +101,7 @@ int		print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 int		exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp);
 int		run_child_process(t_arg *arg, int *fd, t_list *node);
 int		exec_cmds(t_arg *arg);
+int		wait_childs(t_arg *arg, int f_pid, int l_pid);
 
 // redi.c
 void	handle_redi(t_cmd *cmd);

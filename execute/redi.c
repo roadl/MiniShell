@@ -39,11 +39,41 @@ static void	open_file(char *file, int option, int type, t_cmd *cmd)
 		handle_systemcall_error();
 }
 
+static void	do_here_doc(t_cmd *cmd, t_redi *redi)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			ft_putstr_fd("\033[1A", STDIN_FILENO);
+			ft_putstr_fd("\033[2C", STDIN_FILENO);
+			break ;
+		}
+		if (ft_strncmp(line, redi->file, ft_strlen(line)) == 0)
+			break ;
+		ft_putstr_fd(line, cmd->read_fd);
+		ft_putstr_fd("\n", cmd->read_fd);
+	}
+}
+
+static void	reopen_here_doc(t_cmd *cmd)
+{
+	if (cmd->here_doc)
+	{
+		close(cmd->read_fd);
+		cmd->read_fd = open(".temp", O_RDONLY);
+		if (cmd->read_fd < 0)
+			handle_systemcall_error();
+	}
+}
+
 void	handle_here_doc(t_cmd *cmd)
 {
 	t_list	*node;
 	t_redi	*redi;
-	char	*line;
 
 	node = cmd->redi_list;
 	while (node)
@@ -57,17 +87,11 @@ void	handle_here_doc(t_cmd *cmd)
 			cmd->read_fd = open(".temp", O_RDWR | O_CREAT | O_TRUNC, 0644);
 			if (cmd->read_fd < 0)
 				handle_systemcall_error();
-			while (1)
-			{
-				line = readline("> ");
-				if (ft_strncmp(line, redi->file, ft_strlen(line)) == 0)
-					break ;
-				ft_putstr_fd(line, cmd->read_fd);
-				ft_putstr_fd("\n", cmd->read_fd);
-			}
+			do_here_doc(cmd, redi);
 		}
 		node = node->next;
 	}
+	reopen_here_doc(cmd);
 }
 
 void	handle_redi(t_cmd *cmd)
@@ -78,13 +102,6 @@ void	handle_redi(t_cmd *cmd)
 	set_signal_heredoc();
 	handle_here_doc(cmd);
 	node = cmd->redi_list;
-	if (cmd->here_doc)
-	{
-		close(cmd->read_fd);
-		cmd->read_fd = open(".temp", O_RDONLY);
-		if (cmd->read_fd < 0)
-			handle_systemcall_error();
-	}
 	while (node)
 	{
 		redi = node->content;

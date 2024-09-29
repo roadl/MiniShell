@@ -114,9 +114,10 @@ int	exec_cmds(t_arg *arg)
 	t_list	*node;
 	t_cmd	*cmd;
 	int		fd[2];
-	int		pid;
-	int		status;
+	int		l_pid;
+	int		f_pid;
 
+	l_pid = 0;
 	node = arg->cmd_list;
 	if (is_only_built_in(arg))
 		return (exec_built_in(node->content, arg, &arg->env_list, &arg->envp));
@@ -136,14 +137,11 @@ int	exec_cmds(t_arg *arg)
 			cmd->write_fd = fd[WRITE];
 		else
 			cmd->write_fd = STDOUT_FILENO;
-		pid = run_child_process(arg, fd, node);
+		if (node == arg->cmd_list)
+			f_pid = run_child_process(arg, fd, node);
+		else
+			l_pid = run_child_process(arg, fd, node);
 		node = node->next;
 	}
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		arg->last_exit_code = WEXITSTATUS(status);
-	else
-		arg->last_exit_code = 128 + WTERMSIG(status);
-	wait(0);
-	return (arg->last_exit_code);
+	return (wait_childs(arg, f_pid, l_pid));
 }
