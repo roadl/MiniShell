@@ -3,6 +3,13 @@
 #define READ 0
 #define WRITE 1
 
+int	g_exit_code = 0;
+
+void	set_signal_status(void)
+{
+	g_exit_code = 1;
+}
+
 // 들어올때 SHLVL 하나 증가시켜야 함
 int	main(int argc, char **argv, char **envp)
 {
@@ -40,10 +47,8 @@ int	main(int argc, char **argv, char **envp)
 		make_cmd(&arg);
 		print_cmd_list(arg.cmd_list);
 		set_signal_fork();
-		exec_cmds(&arg);
+		g_exit_code = exec_cmds(&arg);
 		free(line);
 		ft_lstclear(&arg.cmd_list, free_cmd);
-		// 실행
-		// free, unlink
 	}
 }

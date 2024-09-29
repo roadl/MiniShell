@@ -5,6 +5,8 @@
 
 void	execute_command(t_arg *arg, t_cmd *cmd)
 {
+	if (handle_redi(cmd) == -1)
+		exit(EXIT_FAILURE);
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
 	dup_fd(cmd);
@@ -31,6 +33,8 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 {
 	int		res;
 
+	if (handle_redi(cmd) == -1)
+		return (1);
 	dup_fd(cmd);
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
@@ -85,7 +89,6 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 			close(fd[READ]);
 		if (cmd->read_fd < 0 || cmd->write_fd < 0)
 			handle_systemcall_error();
-		handle_redi(cmd);
 		set_signal_origin();
 		set_terminal_print_on();
 		if (is_built_in(cmd->cmd))
@@ -106,7 +109,11 @@ int	exec_cmds(t_arg *arg)
 	l_pid = 0;
 	node = arg->cmd_list;
 	if (is_only_built_in(arg))
+	{
+		if (handle_redi(node->content) == -1)
+			return (1);
 		return (exec_built_in(node->content, arg, &arg->env_list, &arg->envp));
+	}
 	while (node)
 	{
 		set_fd(arg, node->content, node, fd);

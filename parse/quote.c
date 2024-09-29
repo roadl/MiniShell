@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_exit_code;
+
 size_t	find_env_len(char *token)
 {
 	size_t	i = 0;
@@ -19,7 +21,7 @@ char *replace_env_variable(char *token, int *i, t_arg *arg)
 	(*i)++;
 	if (token[*i] == '?')
 	{
-		result = ft_itoa(arg->last_exit_code);
+		result = ft_itoa(g_exit_code);
 		(*i)++;
 	}
 	else
