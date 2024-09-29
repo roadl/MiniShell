@@ -65,7 +65,7 @@ char	*ft_strjoin_with_free(char *s1, char *s2)
 
 	join = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!join)
-		return (NULL);
+		handle_systemcall_error();
 	i = 0;
 	while (i < ft_strlen(s1))
 	{
