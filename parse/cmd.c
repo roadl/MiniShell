@@ -8,6 +8,8 @@ static char	*get_cmd(char *cmd, char *path)
 	int		i;
 
 	path_list = ft_split(path, ':');
+	if (!*cmd)
+		return (ft_strdup(cmd));
 	i = 0;
 	while (path_list[i])
 	{
