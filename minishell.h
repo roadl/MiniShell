@@ -38,6 +38,9 @@ typedef struct s_redi {
 	char	*file;
 }	t_redi;
 
+// minishell.c
+void	set_signal_status(void);
+
 // parse.c
 t_list	*allocate_cmds(int cmd_count);
 void	store_redirection(t_list **redi_list, char **tokens, int *token_index);
@@ -112,7 +115,7 @@ void	dup_fd(t_cmd *cmd);
 void	set_fd(t_arg *arg, t_cmd *cmd, t_list *node, int fd[2]);
 
 // redi.c
-void	handle_redi(t_cmd *cmd);
+int		handle_redi(t_cmd *cmd);
 
 // init.c
 int		init_arg(t_arg *arg, char **envp);

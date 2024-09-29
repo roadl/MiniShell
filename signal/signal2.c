@@ -36,7 +36,7 @@ void	do_sigint(int signum)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	// change_exit_status(1);
+	set_signal_status();
 }
 
 void	do_sigterm(void)
