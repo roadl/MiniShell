@@ -45,7 +45,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		process_quotes(&arg);
 		make_cmd(&arg);
-		//print_cmd_list(arg.cmd_list);
+		print_cmd_list(arg.cmd_list);
 		set_signal_fork();
 		g_exit_code = exec_cmds(&arg);
 		free(line);

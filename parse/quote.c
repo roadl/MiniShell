@@ -29,7 +29,10 @@ char *replace_env_variable(char *token, int *i, t_arg *arg)
 		env_key = ft_substr(token, *i, find_env_len(&token[*i]));
 		*i += ft_strlen(env_key);
 		env_value = get_env_value(find_env(env_key, arg->env_list));
-		result = ft_strdup(env_value);
+		if (!env_value)
+			result = ft_strdup("");
+		else
+			result = ft_strdup(env_value);
 		free(env_key);
 	}
 	return result;
@@ -47,7 +50,7 @@ char	*change_quotes(char *token, t_arg *arg)
 		return NULL;
 	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
 	if (!new_token)
-		return NULL;
+		handle_systemcall_error();
 	while (token[i])
 	{
 		if (token[i] == '\'')
