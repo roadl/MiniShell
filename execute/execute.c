@@ -117,7 +117,6 @@ int	exec_cmds(t_arg *arg)
 	while (node)
 	{
 		set_fd(arg, node->content, node, fd);
-		printf("fd: %d %d\n", fd[0], fd[1]);
 		if (node == arg->cmd_list)
 			f_pid = run_child_process(arg, fd, node);
 		else
