@@ -86,6 +86,7 @@ char	*change_quotes(char *token, t_arg *arg)
 		else
 			new_token[j++] = token[i++];
 	}
+	free(token);
 	new_token[j] = '\0';
 	return new_token;
 }

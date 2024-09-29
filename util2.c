@@ -25,19 +25,17 @@ char	**remove_str_from_array(char **arr, int index)
 		len++;
 	new_arr = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!new_arr)
-		return NULL;
+		handle_systemcall_error();
 	for (i = 0, j = 0; arr[i]; i++)
 	{
 		if (i != index)
 		{
-			new_arr[j] = strdup(arr[i]);
+			new_arr[j] = ft_strdup(arr[i]);
 			j++;
 		}
 	}
 	new_arr[j] = NULL;
-	for (i = 0; arr[i]; i++)
-		free(arr[i]);
-	free(arr);
+	free_strs(arr);
 	return new_arr;
 }
 

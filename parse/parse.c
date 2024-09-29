@@ -71,6 +71,7 @@ t_list *parsing(char *input, int *cmd_count)
 	char	**pipe_segments;
 	t_list	*cmds;
 	char	**tokens;
+	t_list	*redi_list;
 	
 	pipe_segments = ft_split(input, '|');
 	*cmd_count = count_pipe(input) + 1;
@@ -78,7 +79,7 @@ t_list *parsing(char *input, int *cmd_count)
 	for (int i = 0; i < *cmd_count; i++)
 	{
 		tokens = tokenize_input(pipe_segments[i]);
-		t_list *redi_list = NULL;
+		redi_list = NULL;
 		int token_index = 0;
 
 		if (!tokens || !(*tokens))
