@@ -78,7 +78,7 @@ int		ft_unset(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_env(t_cmd *cmd, char ***envp);
 int		ft_exit(t_cmd *cmd);
 int		check_cd_path(char *path);
-int		check_cd_numeric(char *exit_code);
+int		check_exit_numeric(char *exit_code);
 int		check_echo_option(t_cmd *cmd);
 
 // env.c
