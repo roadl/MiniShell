@@ -48,7 +48,7 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 		close(cmd->write_fd);
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
-		res = ft_echo(cmd, 1);
+		res = ft_echo(cmd);
 	if (ft_strncmp(cmd->cmd, "cd", 3) == 0)
 		res = ft_cd(cmd, env_list, envp);
 	if (ft_strncmp(cmd->cmd, "pwd", 4) == 0)

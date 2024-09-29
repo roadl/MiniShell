@@ -7,6 +7,8 @@
 # include <signal.h>
 # include <errno.h>
 # include <string.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
@@ -53,13 +55,16 @@ char	**tokenize_input(char *input);
 void	process_quotes(t_arg *arg);
 
 // built_in.c
-int		ft_echo(t_cmd *cmd, int option);
+int		ft_echo(t_cmd *cmd);
 int		ft_cd(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_pwd(t_cmd *cmd);
 int		ft_export(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_unset(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_env(t_cmd *cmd, char ***envp);
 int		ft_exit(t_cmd *cmd);
+int		check_cd_path(char *path);
+int		check_cd_numeric(char *exit_code);
+int		check_echo_option(t_cmd *cmd);
 
 // env.c
 int		update_env(char *str, t_list **env_list, char ***envp);

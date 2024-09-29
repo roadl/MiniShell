@@ -33,8 +33,17 @@ static void	update_pwd(const char *key, t_list **env_list, char ***envp)
 {
 	char	*cur;
 	char	*temp;
+	t_list	*node;
 
-	cur = getcwd(NULL, 0);
+	if (ft_strncmp(key, "OLDPWD=", 8) == 0)
+	{
+		node = find_env("PWD", *env_list);
+		if (!node)
+			return ;
+		cur = get_env_value(node);
+	}
+	else
+		cur = getcwd(NULL, 0);
 	if (!cur)
 		handle_systemcall_error();
 	temp = ft_strjoin(key, cur);
@@ -47,24 +56,30 @@ static void	update_pwd(const char *key, t_list **env_list, char ***envp)
 
 // option -n 들어올 수 있음
 // $?에 대한 처리 어떻게 할지 생각해야 함
-int	ft_echo(t_cmd *cmd, int option)
+int	ft_echo(t_cmd *cmd)
 {
 	int	i;
+	int	option;
 
 	i = 1;
+	option = 0;
+	if (check_echo_option(cmd))
+	{
+		i = 2;
+		option = 1;
+	}
 	while (cmd->argv[i])
 	{	
-		if (i != 1)
-			printf(" ");
 		printf("%s", cmd->argv[i++]);
+		if (cmd->argv[i])
+			printf(" ");
 	}
-	if (option)
+	if (!option)
 		printf("\n");
 	return (0);
 }
 
 // 상대, 절대 경로
-// 경로 오면 터짐 버근가
 int	ft_cd(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	char	*path;
@@ -78,7 +93,7 @@ int	ft_cd(t_cmd *cmd, t_list **env_list, char ***envp)
 		if (!path)
 			handle_systemcall_error();
 	}
-	if (!path)
+	if (!path || check_cd_path(path))
 		return (EXIT_FAILURE);
 	update_pwd("OLDPWD=", env_list, envp);
 	if (chdir(path) == -1)
@@ -90,20 +105,31 @@ int	ft_cd(t_cmd *cmd, t_list **env_list, char ***envp)
 }
 
 // 인자 없음 0
-// 인자 있음 % 256
 // 숫자 아니면 에러메세지
 // 인자 2개 이상이면 에러메세지
 // single command일때 exit 출력 후 종료
-// 음수일땐 256을 뺀 값
 // 숫자가 long long 넘어가면 에러메세지
 int	ft_exit(t_cmd *cmd)
 {
 	int	exit_code;
 
+	if (cmd->argv[1] && cmd->argv[2])
+	{
+		ft_putstr_fd("fastshell: exit: too many arguments\n", STDOUT_FILENO);
+		return (EXIT_FAILURE);
+	}
 	if (!cmd->argv[1])
+	{
+		printf("exit\n");
 		exit(EXIT_SUCCESS);
-	exit_code = ft_atoi(cmd->argv[1]) % 256;
-	if (exit_code < 0)
-		exit_code = exit_code + 256;
+	}
+	if (!check_cd_numeric(cmd->argv[1]))
+	{
+		printf("exit\n");
+		print_error("exit", cmd->argv[1], \
+			"numeric argument required", error_built_in);
+		exit(255);
+	}
+	exit_code = ft_atoi(cmd->argv[1]);
 	exit(exit_code);
 }

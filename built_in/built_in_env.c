@@ -86,6 +86,9 @@ int	ft_env(t_cmd *cmd, char ***envp)
 	char	**_envp;
 
 	_envp = *envp;
+	if (cmd->argv[1] && cmd->argv[1][0] == '-' && cmd->argv[1][1] != '\0')
+		return (print_error("env", cmd->argv[1], \
+			"invalid option", invalid_option));
 	if (cmd->argv[1])
 		return (print_error("env", cmd->argv[1], \
 			strerror(ENOENT), error_built_in));
@@ -104,7 +107,9 @@ int	ft_pwd(t_cmd *cmd)
 {
 	char	*cur;
 
-	(void)cmd;
+	if (cmd->argv[1] && cmd->argv[1][0] == '-' && cmd->argv[1][1] != '\0')
+		return (print_error("pwd", cmd->argv[1], \
+			"invalid option", invalid_option));
 	cur = getcwd(NULL, 0);
 	if (!cur)
 		handle_systemcall_error();

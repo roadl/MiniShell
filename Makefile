@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+         #
+#    By: yojin <yojin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:18:23 by yojin             #+#    #+#              #
-#    Updated: 2024/09/26 19:49:46 by jeongbel         ###   ########.fr        #
+#    Updated: 2024/09/29 12:23:27 by yojin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ LDIR = ./
 LIBFT = libft.a
 LIBFT_DIR = ./libft
 HEADER = ./minishell.h
-SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c \
+SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c built_in/built_in_util.c \
 	execute/execute.c execute/redi.c env/env.c env/env_util.c \
 	error/error.c init/init.c debug/debug.c util.c util2.c \
 	parse/parse.c parse/tokenize.c #parse/quote.c
