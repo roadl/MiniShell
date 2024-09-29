@@ -52,10 +52,10 @@ char	*change_quotes(char *token, t_arg *arg)
 					{
 						//환경변수 키 찾고 ft_strjoin_with_free로 합쳐주기
 						env_key = ft_substr(token, i, find_env_len(&token[i]));
+						i += ft_strlen(env_key);
 						env_value = get_env_value(find_env(env_key, arg->env_list));
 						j += ft_strlen(env_value);
 						new_token = ft_strjoin_with_free(new_token, env_value);
-						i += ft_strlen(env_key);
 						free(env_key);
 						continue ;
 					}

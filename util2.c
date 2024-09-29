@@ -60,27 +60,25 @@ t_cmd	*index_cmd(t_list *lst, int index)
 
 char	*ft_strjoin_with_free(char *s1, char *s2)
 {
-	char	*new_str;
+	char	*join;
 	size_t	i;
-	size_t	j;
 
-	new_str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!new_str)
+	join = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!join)
 		return (NULL);
 	i = 0;
-	while (s1[i])
+	while (i < ft_strlen(s1))
 	{
-		new_str[i] = s1[i];
+		join[i] = s1[i];
 		i++;
 	}
-	j = 0;
-	while (s2[j])
+	while (i < ft_strlen(s1) + ft_strlen(s2))
 	{
-		new_str[i + j] = s2[j];
-		j++;
+		join[i] = s2[i - ft_strlen(s1)];
+		i++;
 	}
-	new_str[i + j] = '\0';
+	join[i] = '\0';
 	free(s1);
 	free(s2);
-	return (new_str);
+	return (join);
 }
