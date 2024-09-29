@@ -1,5 +1,59 @@
 #include "minishell.h"
 
+static int	shlvl_atoi(char *shlvl)
+{
+	int		i;
+	int		result;
+
+	i = 0;
+	result = 0;
+	if (!shlvl)
+		handle_systemcall_error();
+	if (shlvl[0] == '+')
+		i = 1;
+	if (shlvl[0] == '-')
+		return (-1);
+	while (shlvl[i])
+	{
+		if (!ft_isdigit(shlvl[i]))
+			return (0);
+		result = result * 10 + shlvl[i++] - '0';
+		if (result >= 1000)
+			break ;
+	}
+	return (result);
+}
+
+// SHLVL이 숫자가 아니면 1로 초기화함
+static void	up_shlvl(t_arg *arg)
+{
+	char	*value;
+	char	*temp;
+	char	*str;
+	int		level;
+
+	value = get_shlvl(arg);
+	temp = ft_strtrim(value, " ");
+	level = shlvl_atoi(temp);
+	free(temp);
+	free(value);
+	if (++level >= 1000)
+	{
+		printf("fastshell: warning: shell level too high (>= 1000), ");
+		printf("resetting to 1\n");
+		level = 1;
+	}
+	value = ft_itoa(level);
+	if (!value)
+		handle_systemcall_error();
+	str = ft_strjoin("SHLVL=", value);
+	if (!str)
+		handle_systemcall_error();
+	update_env(str, &arg->env_list, &arg->envp);
+	free(value);
+	free(str);
+}
+
 int	init_env_list(t_list **lst, char **envp)
 {
 	int		i;
@@ -59,5 +113,6 @@ int	init_arg(t_arg *arg, char **envp)
 	arg->last_exit_code = EXIT_SUCCESS;
 	arg->origin_stdin = dup(STDIN_FILENO);
 	arg->origin_stdout = dup(STDOUT_FILENO);
+	up_shlvl(arg);
 	return (1);
 }
