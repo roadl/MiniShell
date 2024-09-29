@@ -138,6 +138,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	**remove_str_from_array(char **arr, int index);
 t_cmd	*index_cmd(t_list *lst, int index);
 char	*ft_strjoin_with_free(char *s1, char *s2);
+char	*ft_strncpy(char *dest, char *src, unsigned int n);
 
 // signal.c
 void	set_signal(void);

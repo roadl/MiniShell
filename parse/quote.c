@@ -4,18 +4,19 @@ extern int	g_exit_code;
 
 size_t	find_env_len(char *token)
 {
-	size_t	i = 0;
+	size_t	i;
 
+	i = 0;
 	while (token[i] && (ft_isalnum(token[i]) || token[i] == '_'))
 		i++;
-	return i;
+	return (i);
 }
 
-char *replace_env_variable(char *token, int *i, t_arg *arg)
+char	*replace_env_variable(char *token, int *i, t_arg *arg)
 {
-	char *env_key;
-	char *env_value;
-	char *result;
+	char	*env_key;
+	char	*env_value;
+	char	*result;
 
 	result = NULL;
 	(*i)++;
@@ -35,21 +36,19 @@ char *replace_env_variable(char *token, int *i, t_arg *arg)
 			result = ft_strdup(env_value);
 		free(env_key);
 	}
-	return result;
+	return (result);
 }
 
-// 토큰화된 문자열을 받아서 따옴표 처리를 해주는 함수
-// leak 가능성
 char	*change_quotes(char *token, t_arg *arg)
 {
-	int 	i = 0;
-	int 	j = 0;
+	int		i = 0;
+	int		j = 0;
 	char	*new_token;
 
 	if (!token)
-		return NULL;
+		return (NULL);
 	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
-	new_token[0] = 0;
+	ft_bzero(new_token, ft_strlen(token) + 1);
 	if (!new_token)
 		handle_systemcall_error();
 	while (token[i])
@@ -88,7 +87,7 @@ char	*change_quotes(char *token, t_arg *arg)
 	}
 	free(token);
 	new_token[j] = '\0';
-	return new_token;
+	return (new_token);
 }
 
 void	process_quotes(t_arg *arg)
@@ -112,7 +111,8 @@ void	process_quotes(t_arg *arg)
 		redi = cmd->redi_list;
 		while (redi)
 		{
-			((t_redi *)redi->content)->file = change_quotes(((t_redi *)redi->content)->file, arg);
+			((t_redi *)redi->content)->file
+				= change_quotes(((t_redi *)redi->content)->file, arg);
 			redi = redi->next;
 		}
 		node = node->next;

@@ -80,3 +80,25 @@ char	*ft_strjoin_with_free(char *s1, char *s2)
 	free(s2);
 	return (join);
 }
+
+char	*ft_strncpy(char *dest, char *src, unsigned int n)
+{
+	unsigned int	i;
+	unsigned int	size;
+
+	size = len01(src);
+	i = 0;
+	while (i < n)
+	{
+		if (i >= size)
+		{
+			dest[i] = '\0';
+		}
+		else
+		{
+			dest[i] = src[i];
+		}
+		i++;
+	}
+	return (dest);
+}

@@ -57,8 +57,8 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 	while (i < argc)
 	{
 		if (i == 0)
-			cmd->cmd = strdup(tokens[i]);
-		cmd->argv[i] = strdup(tokens[i]);
+			cmd->cmd = ft_strdup(tokens[i]);
+		cmd->argv[i] = ft_strdup(tokens[i]);
 		if (!cmd->argv[i])
 			handle_systemcall_error();
 		i++;
@@ -66,13 +66,13 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 	cmd->argv[argc] = NULL;
 }
 
-t_list *parsing(char *input, int *cmd_count)
+t_list  *parsing(char *input, int *cmd_count)
 {
 	char	**pipe_segments;
 	t_list	*cmds;
 	char	**tokens;
 	t_list	*redi_list;
-	
+
 	pipe_segments = ft_split(input, '|');
 	*cmd_count = count_pipe(input) + 1;
 	cmds = allocate_cmds(*cmd_count);
@@ -86,8 +86,8 @@ t_list *parsing(char *input, int *cmd_count)
 			break ;
 		while (tokens[token_index])
 		{
-			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0 ||
-				strcmp(tokens[token_index], ">>") == 0 || strcmp(tokens[token_index], "<<") == 0)
+			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0
+            ||	strcmp(tokens[token_index], ">>") == 0 || strcmp(tokens[token_index], "<<") == 0)
 			{
 				store_redirection(&redi_list, tokens, &token_index);
 				tokens = remove_str_from_array(tokens, --token_index);
@@ -106,14 +106,14 @@ t_list *parsing(char *input, int *cmd_count)
 		ft_lstclear(&cmds, free_cmd);
 		if (tokens)
 			print_error("fastshell", NULL, "|", error_syntax);
-		return NULL;
+		return (NULL);
 	}
 	if (check_redi_error(cmds))
 	{
 		ft_lstclear(&cmds, free_cmd);
-		return NULL;
+		return (NULL);
 	}
-	return cmds;
+	return (cmds);
 }
 
 // // test main 함수

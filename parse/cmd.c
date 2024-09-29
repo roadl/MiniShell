@@ -40,12 +40,8 @@ void	make_cmd(t_arg *arg)
 	while (node)
 	{
 		cmd = node->content;
-		if (cmd->cmd == NULL || is_built_in(cmd->cmd))
-		{
-			node = node->next;
-			continue ;
-		}
-		if (ft_strchr(cmd->cmd, '/') == 0)
+		if (!(cmd->cmd == NULL || is_built_in(cmd->cmd))
+			&& ft_strchr(cmd->cmd, '/') == 0)
 		{
 			path = get_env_value(find_env("PATH", arg->env_list));
 			cmd_path = get_cmd(cmd->cmd, path);

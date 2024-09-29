@@ -20,7 +20,7 @@ void	handle_quotes(char *input, int *i, char quote)
 char	**store_token(char **tokens, char *input, int *count, int start, int i)
 {
 	tokens[*count] = (char *)malloc(i - start + 1);
-	strncpy(tokens[*count], &input[start], i - start);
+	ft_strncpy(tokens[*count], &input[start], i - start);
 	tokens[*count][i - start] = '\0';
 	(*count)++;
 	return (tokens);
@@ -50,14 +50,12 @@ char	**handle_special_chars(char *input, char **tokens, int *i, int *count)
 
 char	**tokenize_input(char *input)
 {
-	char	**tokens = allocate_tokens(input);
+	char	**tokens;
 	int 	i = 0, start = 0, count = 0;
 
 	if (!input)
-	{
-		*tokens = NULL;
-		return (tokens);
-	}
+		return (NULL);
+	tokens = allocate_tokens(input);
 	while (input[i])
 	{
 		if (!is_allowed_char(input[i]))
