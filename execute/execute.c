@@ -103,24 +103,24 @@ int	exec_cmds(t_arg *arg)
 {
 	t_list	*node;
 	int		fd[2];
+	int		old_read_fd;
 	int		l_pid;
 	int		f_pid;
 
 	l_pid = 0;
 	node = arg->cmd_list;
 	if (is_only_built_in(arg))
-	{
-		if (handle_redi(node->content) == -1)
-			return (1);
 		return (exec_built_in(node->content, arg, &arg->env_list, &arg->envp));
-	}
 	while (node)
 	{
+		old_read_fd = fd[READ];
 		set_fd(arg, node->content, node, fd);
 		if (node == arg->cmd_list)
 			f_pid = run_child_process(arg, fd, node);
 		else
 			l_pid = run_child_process(arg, fd, node);
+		if (node != arg->cmd_list)
+			close(old_read_fd);
 		node = node->next;
 	}
 	return (wait_childs(arg, f_pid, l_pid));
