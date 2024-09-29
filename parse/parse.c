@@ -9,6 +9,8 @@ t_list	*allocate_cmds(int cmd_count)
 	while (cmd_count--)
 	{
 		cmd = (t_cmd *)malloc(sizeof(t_cmd));
+		if (!cmd)
+			handle_systemcall_error();
 		cmd->cmd = NULL;
 		cmd->argv = NULL;
 		cmd->read_fd = STDIN_FILENO;
@@ -24,9 +26,13 @@ void	store_redirection(t_list **redi_list, char **tokens, int *token_index)
 	t_redi	*redi;
 
 	redi = (t_redi *)malloc(sizeof(t_redi));
+	if (!redi)
+		handle_systemcall_error();
 	redi->redi = ft_strdup(tokens[*token_index]);
 	(*token_index)++;
 	redi->file = ft_strdup(tokens[*token_index]);
+	if (!redi->redi || !redi->file)
+		handle_systemcall_error();
 	ft_lstadd_back(redi_list, ft_lstnew(redi));
 }
 
@@ -35,10 +41,14 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 	int	argc;
 	int	i;
 
+	if (!tokens || !(*tokens))
+		return ;
 	argc = 0;
 	while (tokens[argc])
 		argc++;
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
+	if (!cmd->argv)
+		handle_systemcall_error();
 	i = 0;
 	while (i < argc)
 	{
@@ -83,13 +93,9 @@ t_list *parsing(char *input, int *cmd_count)
 			token_index++;
 		}
 		t_cmd *cmd = (t_cmd *)index_cmd(cmds, i);
-		cmd->read_fd = STDIN_FILENO;
-		cmd->write_fd = STDOUT_FILENO;
 		cmd->redi_list = redi_list;
 		process_tokens(tokens, cmd);
-		for (int j = 0; tokens[j]; j++)
-			free(tokens[j]);
-		free(tokens);
+		free_strs(tokens);
 	}
 	for (int i = 0; pipe_segments[i]; i++)
 		free(pipe_segments[i]);

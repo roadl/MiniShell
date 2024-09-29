@@ -41,6 +41,8 @@ char	*change_quotes(char *token, t_arg *arg)
 	int 	j = 0;
 	char	*new_token;
 
+	if (!token)
+		return NULL;
 	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
 	if (!new_token)
 		return NULL;
@@ -95,7 +97,7 @@ void	process_quotes(t_arg *arg)
 		cmd = node->content;
 		cmd->cmd = change_quotes(cmd->cmd, arg);
 		i = 0;
-		while (cmd->argv[i])
+		while (cmd->cmd && cmd->argv[i])
 		{
 			cmd->argv[i] = change_quotes(cmd->argv[i], arg);
 			i++;

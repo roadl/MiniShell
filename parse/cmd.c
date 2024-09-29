@@ -37,6 +37,12 @@ void	make_cmd(t_arg *arg)
 	while (node)
 	{
 		cmd = node->content;
+		if (cmd->cmd == NULL)
+		{
+			printf("cmd is NULL\n");
+			node = node->next;
+			continue ;
+		}
 		if (is_built_in(cmd->cmd))
 		{
 			node = node->next;
