@@ -47,6 +47,7 @@ char	*change_quotes(char *token, t_arg *arg)
 	if (!token)
 		return NULL;
 	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
+	new_token[0] = 0;
 	if (!new_token)
 		handle_systemcall_error();
 	while (token[i])
