@@ -1,32 +1,5 @@
 #include "minishell.h"
 
-static int	print_export(t_list *env_list)
-{
-	t_list	*node;
-	char	*key;
-	char	*value;
-
-	node = env_list;
-	while (node)
-	{
-		if (ft_strncmp(node->content, "", 1) == 0)
-		{
-			node = node->next;
-			continue ;
-		}
-		key = get_env_key(node);
-		value = get_env_value(node);
-		printf("declare -x %s", key);
-		if (value)
-			printf("=\"%s\"", value);
-		printf("\n");
-		free(key);
-		free(value);
-		node = node->next;
-	}
-	return (0);
-}
-
 // 인자 없을때 아스키코드순으로 출력해야 함. 어떻게?
 // 있어도 바뀌는게 아니라 추가만 된다.
 int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
@@ -34,7 +7,7 @@ int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 	int		i;
 
 	if (!cmd->argv[1])
-		print_export(*env_list);
+		export_no_option(*env_list);
 	i = 1;
 	while (cmd->argv[i])
 	{

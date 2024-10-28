@@ -77,6 +77,7 @@ int		ft_export(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_unset(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_env(t_cmd *cmd, char ***envp);
 int		ft_exit(t_cmd *cmd);
+void	export_no_option(t_list *env_list);
 int		check_cd_path(char *path);
 int		check_exit_numeric(char *exit_code);
 int		check_echo_option(t_cmd *cmd);
@@ -104,6 +105,7 @@ typedef enum e_error_type {
 	invalid_option
 }	t_error_type;
 
+void	ft_putnstr_fd(char *s, int n, int fd);
 void	handle_systemcall_error(void);
 int		print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 

@@ -17,7 +17,7 @@ LDIR = ./
 LIBFT = libft.a
 LIBFT_DIR = ./libft
 HEADER = ./minishell.h
-SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c built_in/built_in_util.c \
+SRCS = minishell.c built_in/built_in.c built_in/built_in_env.c built_in/built_in_util.c  built_in/built_in_util2.c\
 	execute/execute.c execute/redi.c execute/execute_util.c env/env.c env/env_util.c \
 	error/error.c init/init.c debug/debug.c util.c util2.c \
 	parse/parse.c parse/tokenize.c parse/quote.c parse/cmd.c \

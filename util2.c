@@ -86,7 +86,7 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 	unsigned int	i;
 	unsigned int	size;
 
-	size = len01(src);
+	size = ft_strlen(src);
 	i = 0;
 	while (i < n)
 	{
