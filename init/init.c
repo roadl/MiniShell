@@ -60,6 +60,8 @@ int	init_env_list(t_list **lst, char **envp)
 	t_list	*new;
 
 	i = 0;
+	if (!envp)
+		return (1);
 	while (envp[i])
 	{
 		new = ft_lstnew(ft_strdup(envp[i]));

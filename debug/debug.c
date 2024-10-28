@@ -29,8 +29,9 @@ void	print_cmd_list(t_list *lst)
 		j = 0;
 		cmd = node->content;
 		printf("[%d]: %s\n", i++, cmd->cmd);
-		while (cmd->argv[j])
-			printf("	%s\n", cmd->argv[j++]);
+		if (cmd->argv)
+			while (cmd->argv[j])
+				printf("	%s\n", cmd->argv[j++]);
 		print_redi_list(cmd->redi_list);
 		node = node->next;
 	}
