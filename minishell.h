@@ -105,7 +105,6 @@ typedef enum e_error_type {
 	invalid_option
 }	t_error_type;
 
-void	ft_putnstr_fd(char *s, int n, int fd);
 void	handle_systemcall_error(void);
 int		print_error(char *cmd, char *arg, char *msg, t_error_type err_type);
 

@@ -114,5 +114,6 @@ int	init_arg(t_arg *arg, char **envp)
 	arg->origin_stdin = dup(STDIN_FILENO);
 	arg->origin_stdout = dup(STDOUT_FILENO);
 	up_shlvl(arg);
+	update_env("OLDPWD", &arg->env_list, &arg->envp);
 	return (1);
 }
