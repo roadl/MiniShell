@@ -58,7 +58,6 @@ void	export_no_option(t_list *env_list)
 
 	envp = NULL;
 	envp = env_list_to_envp(env_list, envp);
-	printf("envp: %p\n", envp);
 	sort_envp(envp);
 	print_export(envp);
 	i = 0;

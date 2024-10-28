@@ -80,7 +80,8 @@ int		ft_exit(t_cmd *cmd);
 void	export_no_option(t_list *env_list);
 int		check_cd_path(char *path);
 int		check_exit_numeric(char *exit_code);
-int		check_echo_option(t_cmd *cmd);
+int		check_echo_option(char *cmd);
+void	update_pwd(const char *key, t_list **env_list, char ***envp);
 
 // env.c
 int		update_env(char *str, t_list **env_list, char ***envp);

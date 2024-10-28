@@ -59,16 +59,16 @@ int	check_exit_numeric(char *arg)
 	return (1);
 }
 
-int	check_echo_option(t_cmd *cmd)
+int	check_echo_option(char *str)
 {
-	int	j;
+	int	i;
 
-	if (cmd->argv[1] && ft_strncmp(cmd->argv[1], "-n", 2) == 0)
+	if (str && ft_strncmp(str, "-n", 2) == 0)
 	{
-		j = 2;
-		while (cmd->argv[1][j] && cmd->argv[1][j] == 'n')
-			j++;
-		if (!cmd->argv[1][j])
+		i = 2;
+		while (str[i] && str[i] == 'n')
+			i++;
+		if (!str[i])
 		{
 			return (1);
 		}

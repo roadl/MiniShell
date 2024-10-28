@@ -29,7 +29,7 @@ static char	*get_path(char *find, t_list *env_list)
 	return (path);
 }
 
-static void	update_pwd(const char *key, t_list **env_list, char ***envp)
+void	update_pwd(const char *key, t_list **env_list, char ***envp)
 {
 	char	*cur;
 	char	*temp;
@@ -60,16 +60,20 @@ int	ft_echo(t_cmd *cmd)
 {
 	int	i;
 	int	option;
+	int	opt_end;
 
 	i = 1;
 	option = 0;
-	if (check_echo_option(cmd))
-	{
-		i = 2;
-		option = 1;
-	}
+	opt_end = 0;
 	while (cmd->argv[i])
 	{	
+		if (check_echo_option(cmd->argv[i]) && !opt_end)
+		{
+			i++;
+			option = 1;
+			continue ;
+		}
+		opt_end = 1;
 		printf("%s", cmd->argv[i++]);
 		if (cmd->argv[i])
 			printf(" ");
