@@ -17,67 +17,62 @@ void	handle_quotes(char *input, int *i, char quote)
 		(*i)++;
 }
 
-char	**store_token(char **tokens, char *input, int *count, int start, int i)
+void	store_token(char *input, t_token_state *state)
 {
-	tokens[*count] = (char *)malloc(i - start + 1);
-	ft_strncpy(tokens[*count], &input[start], i - start);
-	tokens[*count][i - start] = '\0';
-	(*count)++;
-	return (tokens);
+	state->tokens[state->count] = (char *)malloc(state->i - state->start + 1);
+	ft_strncpy(state->tokens[state->count],
+		&input[state->start], state->i - state->start);
+	state->tokens[state->count][state->i - state->start] = '\0';
+	(state->count)++;
 }
 
-char	**handle_special_chars(char *input, char **tokens, int *i, int *count)
+void	handle_special_chars(char *input, t_token_state *state)
 {
-	if ((input[*i] == '>' && input[*i + 1] == '>')
-		|| (input[*i] == '<' && input[*i + 1] == '<'))
+	if ((input[state->i] == '>' && input[state->i + 1] == '>')
+		|| (input[state->i] == '<' && input[state->i + 1] == '<'))
 	{
-		tokens[*count] = (char *)malloc(3);
-		tokens[*count][0] = input[*i];
-		tokens[*count][1] = input[*i + 1];
-		tokens[*count][2] = '\0';
-		(*i)++;
-		(*count)++;
+		state->tokens[state->count] = (char *)malloc(3);
+		state->tokens[state->count][0] = input[state->i];
+		state->tokens[state->count][1] = input[state->i + 1];
+		state->tokens[state->count][2] = '\0';
+		(state->i)++;
+		(state->count)++;
 	}
-	else if (input[*i] == '>' || input[*i] == '<' || input[*i] == '|')
+	else if (input[state->i] == '>' || input[state->i] == '<'
+		|| input[state->i] == '|')
 	{
-		tokens[*count] = (char *)malloc(2);
-		tokens[*count][0] = input[*i];
-		tokens[*count][1] = '\0';
-		(*count)++;
+		state->tokens[state->count] = (char *)malloc(2);
+		state->tokens[state->count][0] = input[state->i];
+		state->tokens[state->count][1] = '\0';
+		(state->count)++;
 	}
-	return (tokens);
 }
 
 char	**tokenize_input(char *input)
 {
-	char	**tokens;
-	int 	i = 0, start = 0, count = 0;
+	t_token_state	*state;
 
-	if (!input)
+	if (!input || is_input_error(input))
 		return (NULL);
-	tokens = allocate_tokens(input);
-	while (input[i])
+	state = init_token_state();
+	state->tokens = allocate_tokens(input);
+	while (input[state->i])
 	{
-		if (!is_allowed_char(input[i]))
+		if (input[state->i] == '\'' || input[state->i] == '"')
+			handle_quotes(input, &state->i, input[state->i]);
+		if (input[state->i] == ' ' || input[state->i] == '\t'
+			|| input[state->i] == '|' || input[state->i] == '>'
+			|| input[state->i] == '<')
 		{
-			print_error("fastshell", NULL, &input[i], error_syntax);
-			free_strs(tokens);
-			return (NULL);
+			if (state->i > state->start)
+				store_token(input, state);
+			handle_special_chars(input, state);
+			state->start = state->i + 1;
 		}
-		if (input[i] == '\'' || input[i] == '"')
-			handle_quotes(input, &i, input[i]);
-		if (input[i] == ' ' || input[i] == '\t' || input[i] == '|'
-			|| input[i] == '>' || input[i] == '<')
-		{
-			if (i > start)
-				tokens = store_token(tokens, input, &count, start, i);
-			tokens = handle_special_chars(input, tokens, &i, &count);
-			start = i + 1;
-		}
-		i++;
+		state->i++;
 	}
-	if (i > start)
-		tokens = store_token(tokens, input, &count, start, i);
-	tokens[count] = NULL;
-	return (tokens);
+	if (state->i > state->start)
+		store_token(input, state);
+	state->tokens[state->count] = NULL;
+	return (state->tokens);
 }

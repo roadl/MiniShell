@@ -59,3 +59,17 @@ int	is_redi_error(t_cmd *cmd)
 	}
 	return (0);
 }
+
+t_token_state	*init_token_state(void)
+{
+	t_token_state	*state;
+
+	state = (t_token_state *)malloc(sizeof(t_token_state));
+	if (!state)
+		handle_systemcall_error();
+	state->tokens = NULL;
+	state->count = 0;
+	state->i = 0;
+	state->start = 0;
+	return (state);
+}

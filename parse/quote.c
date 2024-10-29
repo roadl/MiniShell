@@ -44,13 +44,14 @@ char	*change_quotes(char *token, t_arg *arg)
 	int		i = 0;
 	int		j = 0;
 	char	*new_token;
+	char	*env_value;
 
 	if (!token)
 		return (NULL);
 	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
-	ft_bzero(new_token, ft_strlen(token) + 1);
 	if (!new_token)
 		handle_systemcall_error();
+	ft_bzero(new_token, ft_strlen(token) + 1);
 	while (token[i])
 	{
 		if (token[i] == '\'')
@@ -67,10 +68,10 @@ char	*change_quotes(char *token, t_arg *arg)
 			{
 				if (token[i] == '$')
 				{
-					char *env_value = replace_env_variable(token, &i, arg);
+					env_value = replace_env_variable(token, &i, arg);
 					j += ft_strlen(env_value);
 					new_token = ft_strjoin_with_free(new_token, env_value);
-					continue;
+					continue ;
 				}
 				new_token[j++] = token[i++];
 			}
@@ -78,7 +79,7 @@ char	*change_quotes(char *token, t_arg *arg)
 		}
 		else if (token[i] == '$')
 		{
-			char *env_value = replace_env_variable(token, &i, arg);
+			env_value = replace_env_variable(token, &i, arg);
 			j += ft_strlen(env_value);
 			new_token = ft_strjoin_with_free(new_token, env_value);
 		}

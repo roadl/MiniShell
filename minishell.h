@@ -38,6 +38,13 @@ typedef struct s_redi {
 	char	*file;
 }	t_redi;
 
+typedef struct s_token_state {
+	char    **tokens;
+	int     count;
+	int     i;
+	int     start;
+}   t_token_state;
+
 // minishell.c
 void	set_signal_status(void);
 
@@ -50,8 +57,8 @@ t_list	*parsing(char *input, int *cmd_count);
 // tokenize.c
 char	**allocate_tokens(char *input);
 void	handle_quotes(char *input, int *i, char quote);
-char	**store_token(char **tokens, char *input, int *count, int start, int i);
-char	**handle_special_chars(char *input, char **tokens, int *i, int *count);
+void    store_token(char *input, t_token_state *state);
+void	handle_special_chars(char *input, t_token_state *state);
 char	**tokenize_input(char *input);
 
 // quote.c
@@ -61,13 +68,15 @@ void	process_quotes(t_arg *arg);
 void	make_cmd(t_arg *arg);
 
 // parse_util.c
-int		is_allowed_char(char c);
-int		count_pipe(char *input);
-int		is_cmd_empty(t_cmd *cmd);
-int		is_redi_error(t_cmd *cmd);
+int	    		is_allowed_char(char c);
+int			    count_pipe(char *input);
+int			    is_cmd_empty(t_cmd *cmd);
+int	    		is_redi_error(t_cmd *cmd);
+t_token_state	*init_token_state(void);
 
 // parse_error.c
 int		check_redi_error(t_list *cmd_list);
+int		is_input_error(char *input);
 
 // built_in.c
 int		ft_echo(t_cmd *cmd);

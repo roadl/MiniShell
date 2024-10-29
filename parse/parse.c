@@ -87,7 +87,7 @@ t_list  *parsing(char *input, int *cmd_count)
 		while (tokens[token_index])
 		{
 			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0
-            ||	strcmp(tokens[token_index], ">>") == 0 || strcmp(tokens[token_index], "<<") == 0)
+			||	strcmp(tokens[token_index], ">>") == 0 || strcmp(tokens[token_index], "<<") == 0)
 			{
 				store_redirection(&redi_list, tokens, &token_index);
 				tokens = remove_str_from_array(tokens, --token_index);
@@ -104,8 +104,7 @@ t_list  *parsing(char *input, int *cmd_count)
 	if (*cmd_count != 1 && is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
 	{
 		ft_lstclear(&cmds, free_cmd);
-		if (tokens)
-			print_error("fastshell", NULL, "|", error_syntax);
+		print_error("fastshell", NULL, "|", error_syntax);
 		return (NULL);
 	}
 	if (check_redi_error(cmds))
@@ -115,41 +114,3 @@ t_list  *parsing(char *input, int *cmd_count)
 	}
 	return (cmds);
 }
-
-// // test main 함수
-// int main(void)
-// {
-// 	char *input;
-// 	t_list *cmds;
-// 	int cmd_count, i, j;
-
-// 	input = readline("minishell> ");
-// 	if (!input)
-// 		return 1;
-// 	add_history(input);
-
-// 	cmds = parsing(input, &cmd_count);
-// 	printf("cmd_count: %d\n", cmd_count);
-// 	for (i = 0; i < cmd_count; i++)
-// 	{
-// 		t_cmd *cmd = index_cmd(cmds, i);
-// 		printf("cmd: %s\n", cmd->cmd);
-// 		for (j = 0; cmd->argv[j]; j++)
-// 			printf("argv[%d][%d]: %s\n", i, j, cmd->argv[j]);
-// 		printf("\n");
-// 		t_list *node = cmd->redi_list;
-// 		while (node)
-// 		{
-// 			t_redi *redi = node->content;
-// 			printf("redi: %s\n", redi->redi);
-// 			printf("file: %s\n", redi->file);
-// 			node = node->next;
-// 		}
-// 	}
-
-// 	// 메모리 해제
-// 	ft_lstclear(&cmds, free_cmd);
-// 	free(input);
-
-// 	return 0;
-// }
