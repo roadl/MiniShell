@@ -44,12 +44,15 @@ void	make_cmd(t_arg *arg)
 			&& ft_strchr(cmd->cmd, '/') == 0)
 		{
 			path = get_env_value(find_env("PATH", arg->env_list));
-			cmd_path = get_cmd(cmd->cmd, path);
-			free(path);
-			if (!cmd_path)
-				handle_systemcall_error();
-			free(cmd->cmd);
-			cmd->cmd = cmd_path;
+			if (path)
+			{
+				cmd_path = get_cmd(cmd->cmd, path);
+				free(path);
+				if (!cmd_path)
+					handle_systemcall_error();
+				free(cmd->cmd);
+				cmd->cmd = cmd_path;
+			}
 		}
 		node = node->next;
 	}
