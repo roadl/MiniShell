@@ -86,8 +86,8 @@ t_list  *parsing(char *input, int *cmd_count)
 			break ;
 		while (tokens[token_index])
 		{
-			if (strcmp(tokens[token_index], ">") == 0 || strcmp(tokens[token_index], "<") == 0
-			||	strcmp(tokens[token_index], ">>") == 0 || strcmp(tokens[token_index], "<<") == 0)
+			if (ft_strcmp(tokens[token_index], ">") == 0 || ft_strcmp(tokens[token_index], "<") == 0
+			||	ft_strcmp(tokens[token_index], ">>") == 0 || ft_strcmp(tokens[token_index], "<<") == 0)
 			{
 				store_redirection(&redi_list, tokens, &token_index);
 				tokens = remove_str_from_array(tokens, --token_index);

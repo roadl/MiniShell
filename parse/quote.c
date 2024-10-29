@@ -39,7 +39,7 @@ char	*replace_env_variable(char *token, int *i, t_arg *arg)
 	return (result);
 }
 
-char	*change_quotes(char *token, t_arg *arg)
+char	*change_quotes(char *token, t_arg *arg, char *redi) // quote 마무리 안되는 경우 처리
 {
 	int		i = 0;
 	int		j = 0;
@@ -66,7 +66,7 @@ char	*change_quotes(char *token, t_arg *arg)
 			i++;
 			while (token[i] && token[i] != '"')
 			{
-				if (token[i] == '$')
+				if (token[i] == '$' && ft_strcmp(redi, "<<") != 0)
 				{
 					env_value = replace_env_variable(token, &i, arg);
 					j += ft_strlen(env_value);
@@ -77,7 +77,7 @@ char	*change_quotes(char *token, t_arg *arg)
 			}
 			i++;
 		}
-		else if (token[i] == '$')
+		else if (token[i] == '$' && ft_strcmp(redi, "<<") != 0)
 		{
 			env_value = replace_env_variable(token, &i, arg);
 			j += ft_strlen(env_value);
@@ -102,18 +102,18 @@ void	process_quotes(t_arg *arg)
 	while (node)
 	{
 		cmd = node->content;
-		cmd->cmd = change_quotes(cmd->cmd, arg);
+		cmd->cmd = change_quotes(cmd->cmd, arg, NULL);
 		i = 0;
 		while (cmd->cmd && cmd->argv[i])
 		{
-			cmd->argv[i] = change_quotes(cmd->argv[i], arg);
+			cmd->argv[i] = change_quotes(cmd->argv[i], arg, NULL);
 			i++;
 		}
 		redi = cmd->redi_list;
 		while (redi)
 		{
 			((t_redi *)redi->content)->file
-				= change_quotes(((t_redi *)redi->content)->file, arg);
+				= change_quotes(((t_redi *)redi->content)->file, arg, ((t_redi *)redi->content)->redi);
 			redi = redi->next;
 		}
 		node = node->next;
