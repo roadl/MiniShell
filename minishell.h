@@ -22,6 +22,8 @@ typedef struct s_arg {
 	char	**envp;
 	t_list	*env_list;
 	t_list	*cmd_list;
+    int     index_old;
+    int     index_new;
 }	t_arg;
 
 typedef struct s_cmd {
@@ -62,7 +64,14 @@ void	handle_special_chars(char *input, t_token_state *state);
 char	**tokenize_input(char *input);
 
 // quote.c
+char	*replace_env_variable(char *token, t_arg *arg);
+char	*change_quotes(char *token, t_arg *arg, char *redi);
 void	process_quotes(t_arg *arg);
+
+// quote_util.c
+int		process_single_quote(char *new, char *token, t_arg *arg);
+int		process_double_quote(char *new, char *token, t_arg *arg);
+int		process_dollar(char **new, char *token, t_arg *arg);
 
 // cmd.c
 void	make_cmd(t_arg *arg);
