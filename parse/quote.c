@@ -59,6 +59,13 @@ char	*change_quotes(char *token, t_arg *arg, char *redi) // quote 마무리 안�
 			i++;
 			while (token[i] && token[i] != '\'')
 				new_token[j++] = token[i++];
+			if (token[i] != '\'')
+			{
+				free(token);
+				free(new_token);
+				print_error("fastshell", NULL, "\'", error_syntax);
+				return (NULL);
+			}
 			i++;
 		}
 		else if (token[i] == '"')
@@ -74,6 +81,13 @@ char	*change_quotes(char *token, t_arg *arg, char *redi) // quote 마무리 안�
 					continue ;
 				}
 				new_token[j++] = token[i++];
+			}
+			if (token[i] != '"')
+			{
+				free(token);
+				free(new_token);
+				print_error("fastshell", NULL, "\"", error_syntax);
+				return (NULL);
 			}
 			i++;
 		}
