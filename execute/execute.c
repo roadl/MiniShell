@@ -12,20 +12,7 @@ void	execute_command(t_arg *arg, t_cmd *cmd)
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
 	dup_fd(cmd);
-	if (ft_strchr(cmd->cmd, '/') == 0)
-	{
-		ft_putstr_fd("fastshell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		exit(127);
-	}
-	if (access(cmd->cmd, X_OK) != 0 && access(cmd->cmd, F_OK) == 0)
-	{
-		ft_putstr_fd("fastshell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-		exit(126);
-	}
+	check_cmd(cmd);
 	if (execve(cmd->cmd, cmd->argv, arg->envp))
 		handle_systemcall_error();
 	return ;

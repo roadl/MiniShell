@@ -66,3 +66,20 @@ void	export_no_option(t_list *env_list)
 			free(envp[i++]);
 	free(envp);
 }
+
+int	check_export_arg(t_cmd *cmd, t_list *env_list, int i)
+{
+	t_list	*node;
+
+	if (i == 1 && cmd->argv[i][0] == '-')
+	{
+		print_error("export", cmd->argv[i], \
+			"invalid option", invalid_option);
+		return (2);
+	}
+	node = find_env(cmd->argv[i], env_list);
+	if (node && ft_strchr(node->content, '=') != 0 \
+		&& ft_strchr(cmd->cmd, '=') == 0)
+		return (1);
+	return (0);
+}

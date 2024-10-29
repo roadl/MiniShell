@@ -117,12 +117,7 @@ int	ft_exit(t_cmd *cmd)
 {
 	int	exit_code;
 
-	if (cmd->argv[1] && cmd->argv[2])
-	{
-		printf("exit\n");
-		ft_putstr_fd("fastshell: exit: too many arguments\n", STDOUT_FILENO);
-		return (EXIT_FAILURE);
-	}
+	printf("exit_code: %s\n", cmd->cmd);
 	if (!cmd->argv[1])
 	{
 		printf("exit\n");
@@ -130,11 +125,17 @@ int	ft_exit(t_cmd *cmd)
 	}
 	if (!check_exit_numeric(cmd->argv[1]))
 	{
-		printf("exit\n");
 		print_error("exit", cmd->argv[1], \
 			"numeric argument required", error_built_in);
 		exit(255);
 	}
+	if (cmd->argv[1] && cmd->argv[2])
+	{
+		printf("exit\n");
+		ft_putstr_fd("fastshell: exit: too many arguments\n", STDOUT_FILENO);
+		return (EXIT_FAILURE);
+	}
+	printf("exit\n");
 	exit_code = ft_atoi(cmd->argv[1]);
 	exit(exit_code);
 }

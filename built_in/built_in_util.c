@@ -35,28 +35,27 @@ int	check_exit_numeric(char *arg)
 {
 	char		*exit_code;
 	int			i;
+	int			res;
 
 	i = 0;
+	res = 1;
 	exit_code = ft_strtrim(arg, " ");
 	if (!exit_code)
 		handle_systemcall_error();
 	if (exit_code[i] == '+' || exit_code[i] == '-')
 		i = 1;
+	if (!exit_code[i])
+		res = 0;
 	while (exit_code[i])
 	{
-		if (!ft_isdigit(exit_code[i]))
-		{
-			free(exit_code);
-			return (0);
-		}
-		i++;
+		if (!ft_isdigit(exit_code[i++]))
+			res = 0;
 	}
 	if (!check_exit_range(exit_code))
-	{
+		res = 0;
+	if (!res)
 		free(exit_code);
-		return (0);
-	}
-	return (1);
+	return (res);
 }
 
 int	check_echo_option(char *str)
