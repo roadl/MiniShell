@@ -5,6 +5,7 @@
 int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	int		i;
+	int		status;
 
 	if (!cmd->argv[1])
 		export_no_option(*env_list);
@@ -16,11 +17,13 @@ int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 			i++;
 			continue ;
 		}
-		if (i == 1 && cmd->argv[i][0] == '-')
+		status = check_export_arg(cmd, *env_list, i);
+		if (status == 2)
+			return (2);
+		if (status == 1)
 		{
-			print_error("export", cmd->argv[i], \
-				"invalid option", invalid_option);
-			return (0);
+			i++;
+			continue ;
 		}
 		update_env(cmd->argv[i], env_list, envp);
 		i++;
@@ -63,8 +66,12 @@ int	ft_env(t_cmd *cmd, char ***envp)
 		return (print_error("env", cmd->argv[1], \
 			"invalid option", invalid_option));
 	if (cmd->argv[1])
-		return (print_error("env", cmd->argv[1], \
-			strerror(ENOENT), error_built_in));
+	{
+		ft_putstr_fd("env: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[1], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		return (127);
+	}
 	i = 0;
 	while (_envp[i])
 	{

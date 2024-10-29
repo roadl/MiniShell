@@ -52,3 +52,31 @@ void	set_fd(t_arg *arg, t_cmd *cmd, t_list *node, int fd[2])
 	else
 		cmd->write_fd = STDOUT_FILENO;
 }
+
+void	check_cmd(t_cmd *cmd)
+{
+	struct stat	buf;
+
+	lstat(cmd->cmd, &buf);
+	if (S_ISDIR(buf.st_mode))
+	{
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->cmd, STDERR_FILENO);
+		ft_putstr_fd(": is a directory\n", STDERR_FILENO);
+		exit(126);
+	}
+	if (ft_strchr(cmd->cmd, '/') == 0)
+	{
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		exit(127);
+	}
+	if (access(cmd->cmd, X_OK) != 0 && access(cmd->cmd, F_OK) == 0)
+	{
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+		exit(126);
+	}
+}

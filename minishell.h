@@ -86,11 +86,13 @@ int		ft_export(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_unset(t_cmd *cmd, t_list **env_list, char ***envp);
 int		ft_env(t_cmd *cmd, char ***envp);
 int		ft_exit(t_cmd *cmd);
+
 void	export_no_option(t_list *env_list);
 int		check_cd_path(char *path);
 int		check_exit_numeric(char *exit_code);
 int		check_echo_option(char *cmd);
 void	update_pwd(const char *key, t_list **env_list, char ***envp);
+int		check_export_arg(t_cmd *cmd, t_list *env_list, int i);
 
 // env.c
 int		update_env(char *str, t_list **env_list, char ***envp);
@@ -125,6 +127,7 @@ int		exec_cmds(t_arg *arg);
 int		wait_childs(t_arg *arg, int f_pid, int l_pid);
 void	dup_fd(t_cmd *cmd);
 void	set_fd(t_arg *arg, t_cmd *cmd, t_list *node, int fd[2]);
+void	check_cmd(t_cmd *cmd);
 
 // redi.c
 int		handle_redi(t_cmd *cmd);
