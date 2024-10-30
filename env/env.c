@@ -1,10 +1,5 @@
 #include "minishell.h"
 
-typedef enum e_key_type {
-	EXPORT,
-	UNSET
-}	t_key_type;
-
 static int	is_valid_key(const char *key, t_key_type type)
 {
 	int	i;

@@ -66,7 +66,7 @@ int	ft_echo(t_cmd *cmd)
 	option = 0;
 	opt_end = 0;
 	while (cmd->argv[i])
-	{	
+	{
 		if (check_echo_option(cmd->argv[i]) && !opt_end)
 		{
 			i++;

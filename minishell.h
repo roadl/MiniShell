@@ -104,6 +104,11 @@ void	update_pwd(const char *key, t_list **env_list, char ***envp);
 int		check_export_arg(t_cmd *cmd, t_list *env_list, int i);
 
 // env.c
+typedef enum e_key_type {
+	EXPORT,
+	UNSET
+}	t_key_type;
+
 int		update_env(char *str, t_list **env_list, char ***envp);
 int		unset_env(char *key, t_list **env_list, char ***envp);
 char	*get_shlvl(t_arg *arg);
