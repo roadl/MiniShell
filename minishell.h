@@ -83,7 +83,7 @@ void	make_cmd(t_arg *arg);
 
 // parse_util.c
 int	    		is_allowed_char(char c);
-int			    count_pipe(char *input);
+int			    count_pipe(char **input);
 int			    is_cmd_empty(t_cmd *cmd);
 int	    		is_redi_error(t_cmd *cmd);
 t_token_state	*init_token_state(void);
