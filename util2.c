@@ -5,8 +5,8 @@ int	ft_strcmp(const char *s1, const char *s2)
 	size_t	i;
 
 	i = 0;
-    if (!s1 || !s2)
-        return (1);
+	if (!s1 || !s2)
+		return (1);
 	while (s1[i] || s2[i])
 	{
 		if (s1[i] != s2[i])
@@ -14,31 +14,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	}
 	return (0);
-}
-
-char	**remove_str_from_array(char **arr, int index)
-{
-	int i, j;
-	int len;
-	char **new_arr;
-
-	len = 0;
-	for (i = 0; arr[i]; i++)
-		len++;
-	new_arr = (char **)malloc(sizeof(char *) * (len + 1));
-	if (!new_arr)
-		handle_systemcall_error();
-	for (i = 0, j = 0; arr[i]; i++)
-	{
-		if (i != index)
-		{
-			new_arr[j] = ft_strdup(arr[i]);
-			j++;
-		}
-	}
-	new_arr[j] = NULL;
-	free_strs(arr);
-	return new_arr;
 }
 
 t_cmd	*index_cmd(t_list *lst, int index)
@@ -103,4 +78,14 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 		i++;
 	}
 	return (dest);
+}
+
+size_t	ft_strslen(char **strs)
+{
+	size_t  i;
+
+	i = 0;
+	while (strs[i])
+		i++;
+	return (i);
 }

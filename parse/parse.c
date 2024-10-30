@@ -42,13 +42,15 @@ void	store_redirection(t_list **redi_list, char **tokens, int *token_index)
 
 void	process_tokens(char **tokens, t_cmd *cmd)
 {
-	int	argc;
-	int	i;
+	int		argc;
+	int		i;
+	char	**cmd_tokens;
 
 	if (!tokens || !(*tokens))
 		return ;
+	cmd_tokens = rm_redi_from_tokens(tokens);
 	argc = 0;
-	while (tokens[argc])
+	while (cmd_tokens[argc])
 		argc++;
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	if (!cmd->argv)
@@ -57,13 +59,43 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 	while (i < argc)
 	{
 		if (i == 0)
-			cmd->cmd = ft_strdup(tokens[i]);
-		cmd->argv[i] = ft_strdup(tokens[i]);
+			cmd->cmd = ft_strdup(cmd_tokens[i]);
+		cmd->argv[i] = ft_strdup(cmd_tokens[i]);
 		if (!cmd->argv[i])
 			handle_systemcall_error();
 		i++;
 	}
 	cmd->argv[argc] = NULL;
+	free_strs(cmd_tokens);
+}
+
+char	**rm_redi_from_tokens(char **tokens)
+{
+	char	**new_tokens;
+	int		i;
+	int		j;
+
+	new_tokens = (char **)malloc(sizeof(char *) * (ft_strslen(tokens) + 1));
+	if (!new_tokens)
+		handle_systemcall_error();
+	i = 0;
+	j = 0;
+	while (tokens[i])
+	{
+		if (ft_strcmp(tokens[i], ">") == 0 || ft_strcmp(tokens[i], ">>") == 0
+			|| ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], "<<") == 0)
+		{
+			i += 2;
+			continue ;
+		}
+		new_tokens[j] = ft_strdup(tokens[i]);
+		if (!new_tokens[j])
+			handle_systemcall_error();
+		i++;
+		j++;
+	}
+	new_tokens[j] = NULL;
+	return (new_tokens);
 }
 
 t_list  *parsing(char *input, int *cmd_count)
@@ -72,33 +104,32 @@ t_list  *parsing(char *input, int *cmd_count)
 	t_list	*cmds;
 	char	**tokens;
 	t_list	*redi_list;
+	int		token_index;
+	int		i;
 
-	pipe_segments = ft_split(input, '|');
-	*cmd_count = count_pipe(input) + 1;
+	i = 0;
+	pipe_segments = tokenize_input(input);
+	if (!pipe_segments)
+		return (NULL);
+	tokens = pipe_segments;
+	token_index = 0;
+	*cmd_count = count_pipe(pipe_segments) + 1;
 	cmds = allocate_cmds(*cmd_count);
-	for (int i = 0; i < *cmd_count; i++)
+	while (tokens[token_index])
 	{
-		tokens = tokenize_input(pipe_segments[i]);
 		redi_list = NULL;
-		int token_index = 0;
-
-		if (!tokens || !(*tokens))
-			break ;
-		while (tokens[token_index])
+		while (ft_strcmp(tokens[token_index], "|") != 0 && tokens[token_index])
 		{
 			if (ft_strcmp(tokens[token_index], ">") == 0 || ft_strcmp(tokens[token_index], "<") == 0
 			||	ft_strcmp(tokens[token_index], ">>") == 0 || ft_strcmp(tokens[token_index], "<<") == 0)
-			{
 				store_redirection(&redi_list, tokens, &token_index);
-				tokens = remove_str_from_array(tokens, --token_index);
-				tokens = remove_str_from_array(tokens, token_index--);
-			}
 			token_index++;
 		}
-		t_cmd *cmd = (t_cmd *)index_cmd(cmds, i);
-		cmd->redi_list = redi_list;
-		process_tokens(tokens, cmd);
-		free_strs(tokens);
+		tokens[token_index] = NULL;
+		token_index++;
+		index_cmd(cmds, i)->redi_list = redi_list;
+		process_tokens(&tokens[token_index], index_cmd(cmds, i));
+		i++;
 	}
 	free_strs(pipe_segments);
 	if (*cmd_count != 1 && is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))

@@ -58,7 +58,7 @@ char	*change_quotes(char *token, t_arg *arg, char *redi)
 		if (token[arg->index_old] == '\'')
 			i = process_single_quote(new_token, token, arg);
 		else if (token[arg->index_old] == '"')
-			i = process_double_quote(new_token, token, arg);
+			i = process_double_quote(new_token, token, arg, redi);
 		else if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0)
 			i = process_dollar(&new_token, token, arg);
 		else

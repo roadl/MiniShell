@@ -22,8 +22,8 @@ typedef struct s_arg {
 	char	**envp;
 	t_list	*env_list;
 	t_list	*cmd_list;
-    int     index_old;
-    int     index_new;
+	int     index_old;
+	int     index_new;
 }	t_arg;
 
 typedef struct s_cmd {
@@ -54,6 +54,7 @@ void	set_signal_status(void);
 t_list	*allocate_cmds(int cmd_count);
 void	store_redirection(t_list **redi_list, char **tokens, int *token_index);
 void	process_tokens(char **tokens, t_cmd *cmd);
+char	**rm_redi_from_tokens(char **tokens);
 t_list	*parsing(char *input, int *cmd_count);
 
 // tokenize.c
@@ -70,7 +71,7 @@ void	process_quotes(t_arg *arg);
 
 // quote_util.c
 int		process_single_quote(char *new, char *token, t_arg *arg);
-int		process_double_quote(char *new, char *token, t_arg *arg);
+int		process_double_quote(char *new, char *token, t_arg *arg, char *redi);
 int		process_dollar(char **new, char *token, t_arg *arg);
 
 // cmd.c
@@ -78,7 +79,7 @@ void	make_cmd(t_arg *arg);
 
 // parse_util.c
 int	    		is_allowed_char(char c);
-int			    count_pipe(char *input);
+int			    count_pipe(char **input);
 int			    is_cmd_empty(t_cmd *cmd);
 int	    		is_redi_error(t_cmd *cmd);
 t_token_state	*init_token_state(void);
@@ -159,10 +160,10 @@ void	free_strs(void *strs);
 void	free_cmd(void *cmd);
 void	free_all(t_arg *arg);
 int		ft_strcmp(const char *s1, const char *s2);
-char	**remove_str_from_array(char **arr, int index);
 t_cmd	*index_cmd(t_list *lst, int index);
 char	*ft_strjoin_with_free(char *s1, char *s2);
 char	*ft_strncpy(char *dest, char *src, unsigned int n);
+size_t	ft_strslen(char **strs);
 
 // signal.c
 void	set_signal(void);

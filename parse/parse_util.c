@@ -5,12 +5,12 @@ int	is_allowed_char(char c)
 	if (ft_isalnum(c) || c == '_' || c == '<' || c == '>' || c == '.'
 		|| c == '|' || c == '"' || c == '\'' || c == '$' || c == '-'
 		|| c == '/' || c == ' ' || c == '\t' || c == '=' || c == '~'
-		|| c == '?')
+		|| c == '?' || c == '+')
 		return (1);
 	return (0);
 }
 
-int	count_pipe(char *input)
+int	count_pipe(char **input)
 {
 	int	count;
 	int	i;
@@ -21,7 +21,7 @@ int	count_pipe(char *input)
 		return (0);
 	while (input[i])
 	{
-		if (input[i] == '|')
+		if (ft_strcmp(input[i], "|") == 0)
 			count++;
 		i++;
 	}

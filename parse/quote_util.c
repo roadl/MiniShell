@@ -16,12 +16,12 @@ int	process_single_quote(char *new, char *token, t_arg *arg)
 	return (0);
 }
 
-int	process_double_quote(char *new, char *token, t_arg *arg)
+int	process_double_quote(char *new, char *token, t_arg *arg, char *redi)
 {
 	arg->index_old++;
 	while (token[arg->index_old] && token[arg->index_old] != '"')
 	{
-		if (token[arg->index_old] == '$' && ft_strcmp(new, "<<") != 0)
+		if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0)
 		{
 			if (process_dollar(&new, token, arg))
 				return (1);

@@ -18,13 +18,19 @@ int	check_redi_error(t_list *cmd_list)
 
 int	is_input_error(char *input)
 {
-	int	i;
+	int		i;
+	char	*c;
 
 	i = 0;
 	while (input[i])
 	{
 		if (!is_allowed_char(input[i]))
+		{
+			c = ft_substr(input, i, 1);
+			print_error("fastshell", NULL, c, error_syntax);
+			free(c);
 			return (1);
+		}
 		i++;
 	}
 	return (0);
