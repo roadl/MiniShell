@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/31 04:17:15 by jeongbel          #+#    #+#             */
+/*   Updated: 2024/10/31 06:29:13 by jeongbel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_list	*allocate_cmds(int cmd_count)
@@ -52,7 +64,6 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 	argc = 0;
 	while (cmd_tokens[argc])
 		argc++;
-	printf("argc: %d\n", argc);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	if (!cmd->argv)
 		handle_systemcall_error();
@@ -81,16 +92,15 @@ char	**rm_redi_from_tokens(char **tokens)
 		handle_systemcall_error();
 	i = 0;
 	j = 0;
-	while (tokens[i])
+	while (tokens[i] && ft_strcmp(tokens[i], "|"))
 	{
-		if (ft_strcmp(tokens[i], ">") == 0 || ft_strcmp(tokens[i], ">>") == 0
-			|| ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], "<<") == 0)
+		if (!ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>")
+			|| !ft_strcmp(tokens[i], "<") || !ft_strcmp(tokens[i], "<<"))
 		{
 			i += 2;
 			continue ;
 		}
 		new_tokens[j] = ft_strdup(tokens[i]);
-		printf("new_tokens[%d]: %s\n", j, new_tokens[j]);
 		if (!new_tokens[j])
 			handle_systemcall_error();
 		i++;
@@ -100,9 +110,9 @@ char	**rm_redi_from_tokens(char **tokens)
 	return (new_tokens);
 }
 
-t_list  *parsing(char *input, int *cmd_count)
+t_list	*parsing(char *input, int *cmd_count)
 {
-	char	**pipe_segments;
+	char	**seg;
 	t_list	*cmds;
 	char	**tokens;
 	t_list	*redi_list;
@@ -110,30 +120,29 @@ t_list  *parsing(char *input, int *cmd_count)
 	int		i;
 
 	i = 0;
-	pipe_segments = tokenize_input(input);
-	if (!pipe_segments)
+	seg = tokenize_input(input);
+	if (!seg)
 		return (NULL);
 	token_index = 0;
-	*cmd_count = count_pipe(pipe_segments) + 1;
+	*cmd_count = count_pipe(seg) + 1;
 	cmds = allocate_cmds(*cmd_count);
-	while (pipe_segments[token_index])
+	while (seg[token_index])
 	{
-		tokens = &pipe_segments[token_index];
+		tokens = &seg[token_index];
 		redi_list = NULL;
-		while (ft_strcmp(pipe_segments[token_index], "|") != 0 && pipe_segments[token_index])
+		while (ft_strcmp(seg[token_index], "|") && seg[token_index])
 		{
-			if (ft_strcmp(pipe_segments[token_index], ">") == 0 || ft_strcmp(pipe_segments[token_index], "<") == 0
-			||	ft_strcmp(pipe_segments[token_index], ">>") == 0 || ft_strcmp(pipe_segments[token_index], "<<") == 0)
-				store_redirection(&redi_list, pipe_segments, &token_index);
+			if (!ft_strcmp(seg[token_index], ">") || !ft_strcmp(seg[token_index], "<")
+				|| !ft_strcmp(seg[token_index], ">>") || !ft_strcmp(seg[token_index], "<<"))
+				store_redirection(&redi_list, seg, &token_index);
 			token_index++;
 		}
-		pipe_segments[token_index] = NULL;
 		token_index++;
 		index_cmd(cmds, i)->redi_list = redi_list;
 		process_tokens(tokens, index_cmd(cmds, i));
 		i++;
 	}
-	free_strs(pipe_segments);
+	free_strs(seg);
 	if (*cmd_count != 1 && is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
 	{
 		ft_lstclear(&cmds, free_cmd);

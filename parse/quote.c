@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quote.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/31 05:43:07 by jeongbel          #+#    #+#             */
+/*   Updated: 2024/10/31 06:15:15 by jeongbel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 extern int	g_exit_code;
@@ -27,7 +39,8 @@ char	*replace_env_variable(char *token, t_arg *arg)
 	}
 	else
 	{
-		env_key = ft_substr(token, arg->index_old, find_env_len(&token[arg->index_old]));
+		env_key = ft_substr(token, arg->index_old,
+				find_env_len(&token[arg->index_old]));
 		arg->index_old += ft_strlen(env_key);
 		env_value = get_env_value(find_env(env_key, arg->env_list));
 		if (!env_value)
@@ -44,15 +57,12 @@ char	*change_quotes(char *token, t_arg *arg, char *redi)
 	char	*new_token;
 	int		i;
 
-	i = 0;
-	arg->index_old = 0;
-	arg->index_new = 0;
 	if (!token)
 		return (NULL);
 	new_token = (char *)malloc(sizeof(char) * ft_strlen(token) + 1);
 	if (!new_token)
 		handle_systemcall_error();
-	ft_bzero(new_token, ft_strlen(token) + 1);
+	init_quote_change(arg, &i, new_token, ft_strlen(token) + 1);
 	while (token[arg->index_old])
 	{
 		if (token[arg->index_old] == '\'')
@@ -83,17 +93,15 @@ void	process_quotes(t_arg *arg)
 	{
 		cmd = node->content;
 		cmd->cmd = change_quotes(cmd->cmd, arg, NULL);
-		i = 0;
-		while (cmd->cmd && cmd->argv[i])
-		{
+		i = -1;
+		while (cmd->cmd && cmd->argv[++i])
 			cmd->argv[i] = change_quotes(cmd->argv[i], arg, NULL);
-			i++;
-		}
 		redi = cmd->redi_list;
 		while (redi)
 		{
 			((t_redi *)redi->content)->file
-				= change_quotes(((t_redi *)redi->content)->file, arg, ((t_redi *)redi->content)->redi);
+				= change_quotes(((t_redi *)redi->content)->file, arg,
+					((t_redi *)redi->content)->redi);
 			redi = redi->next;
 		}
 		node = node->next;
