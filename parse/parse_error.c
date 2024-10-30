@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:10:49 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 06:10:51 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 06:47:38 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	is_input_error(char *input)
 	i = 0;
 	while (input[i])
 	{
+		if (input[i] == '\'' || input[i] == '"')
+			handle_quotes(input, &i, input[i]);
 		if (!is_allowed_char(input[i]))
 		{
 			c = ft_substr(input, i, 1);
