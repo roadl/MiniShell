@@ -15,18 +15,20 @@
 # include <termios.h>
 # include "libft/libft.h"
 
-typedef struct s_arg {
+typedef struct s_arg
+{
 	int		last_exit_code;
 	int		origin_stdin;
 	int		origin_stdout;
 	char	**envp;
 	t_list	*env_list;
 	t_list	*cmd_list;
-	int     index_old;
-	int     index_new;
+	int		index_old;
+	int		index_new;
 }	t_arg;
 
-typedef struct s_cmd {
+typedef struct s_cmd
+{
 	char	*cmd;
 	char	**argv;
 	int		read_fd;
@@ -35,17 +37,19 @@ typedef struct s_cmd {
 	t_list	*redi_list;
 }	t_cmd;
 
-typedef struct s_redi {
+typedef struct s_redi
+{
 	char	*redi;
 	char	*file;
 }	t_redi;
 
-typedef struct s_token_state {
-	char    **tokens;
-	int     count;
-	int     i;
-	int     start;
-}   t_token_state;
+typedef struct s_token_state
+{
+	char	**tokens;
+	int		count;
+	int		i;
+	int		start;
+}	t_token_state;
 
 // minishell.c
 void	set_signal_status(void);
@@ -79,7 +83,7 @@ void	make_cmd(t_arg *arg);
 
 // parse_util.c
 int	    		is_allowed_char(char c);
-int			    count_pipe(char **input);
+int			    count_pipe(char *input);
 int			    is_cmd_empty(t_cmd *cmd);
 int	    		is_redi_error(t_cmd *cmd);
 t_token_state	*init_token_state(void);
@@ -105,6 +109,12 @@ void	update_pwd(const char *key, t_list **env_list, char ***envp);
 int		check_export_arg(t_cmd *cmd, t_list *env_list, int i);
 
 // env.c
+typedef enum e_key_type
+{
+	EXPORT,
+	UNSET
+}	t_key_type;
+
 int		update_env(char *str, t_list **env_list, char ***envp);
 int		unset_env(char *key, t_list **env_list, char ***envp);
 char	*get_shlvl(t_arg *arg);
@@ -114,7 +124,8 @@ char	*get_env_key(t_list *node);
 char	*get_env_value(t_list *node);
 
 // error.c
-typedef enum e_error_type {
+typedef enum e_error_type
+{
 	error_systemcall = -127,
 	error_syntax,
 	error_access,

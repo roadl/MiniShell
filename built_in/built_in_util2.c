@@ -28,27 +28,32 @@ static int	print_export(char **envp)
 	return (0);
 }
 
-static void	sort_envp(char **envp) {
-    int i, j;
-    int count = 0;
+static void	sort_envp(char **envp)
+{
+	char	*temp;
+	int		i;
+	int		j;
+	int		count;
 
-    // envp 배열의 크기(요소 개수) 계산
-    while (envp[count] != NULL) {
-        count++;
-    }
-
-    // Bubble Sort로 문자열 배열 정렬
-    for (i = 0; i < count - 1; i++) {
-        for (j = 0; j < count - i - 1; j++) {
-            // 현재 문자열과 다음 문자열을 비교
-            if (ft_strncmp(envp[j], envp[j + 1], ft_strlen(envp[j])) > 0) {
-                // 두 문자열 포인터 교환
-                char *temp = envp[j];
-                envp[j] = envp[j + 1];
-                envp[j + 1] = temp;
-            }
-        }
-    }
+	i = 0;
+	count = 0;
+	while (envp[count] != NULL)
+		count++;
+	while (i < count - 1)
+	{
+		j = 0;
+		while (j < count - i - 1)
+		{
+			if (ft_strncmp(envp[j], envp[j + 1], ft_strlen(envp[j])) > 0)
+			{
+				temp = envp[j];
+				envp[j] = envp[j + 1];
+				envp[j + 1] = temp;
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
 void	export_no_option(t_list *env_list)

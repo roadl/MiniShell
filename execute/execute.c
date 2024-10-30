@@ -23,7 +23,7 @@ int	exec_built_in(t_cmd *cmd, t_arg *arg, t_list **env_list, char ***envp)
 	int		res;
 
 	if (handle_redi(cmd) == -1)
-		return (1);
+		return (EXIT_FAILURE);
 	dup_fd(cmd);
 	res = 0;
 	if (ft_strncmp(cmd->cmd, "echo", 5) == 0)

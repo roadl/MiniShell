@@ -10,7 +10,7 @@ static int	open_file(char *file, int option, int type, t_cmd *cmd)
 	if (type == WRITE && cmd->write_fd != STDOUT_FILENO)
 		close(cmd->write_fd);
 	if (type == READ)
-	{	
+	{
 		if (access(file, F_OK) != 0)
 		{
 			print_error(NULL, file, "No such file or directory", error_file);
