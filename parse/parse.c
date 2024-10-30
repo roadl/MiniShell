@@ -52,6 +52,7 @@ void	process_tokens(char **tokens, t_cmd *cmd)
 	argc = 0;
 	while (cmd_tokens[argc])
 		argc++;
+	printf("argc: %d\n", argc);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	if (!cmd->argv)
 		handle_systemcall_error();
@@ -89,6 +90,7 @@ char	**rm_redi_from_tokens(char **tokens)
 			continue ;
 		}
 		new_tokens[j] = ft_strdup(tokens[i]);
+		printf("new_tokens[%d]: %s\n", j, new_tokens[j]);
 		if (!new_tokens[j])
 			handle_systemcall_error();
 		i++;
@@ -111,24 +113,24 @@ t_list  *parsing(char *input, int *cmd_count)
 	pipe_segments = tokenize_input(input);
 	if (!pipe_segments)
 		return (NULL);
-	tokens = pipe_segments;
 	token_index = 0;
 	*cmd_count = count_pipe(pipe_segments) + 1;
 	cmds = allocate_cmds(*cmd_count);
-	while (tokens[token_index])
+	while (pipe_segments[token_index])
 	{
+		tokens = &pipe_segments[token_index];
 		redi_list = NULL;
-		while (ft_strcmp(tokens[token_index], "|") != 0 && tokens[token_index])
+		while (ft_strcmp(pipe_segments[token_index], "|") != 0 && pipe_segments[token_index])
 		{
-			if (ft_strcmp(tokens[token_index], ">") == 0 || ft_strcmp(tokens[token_index], "<") == 0
-			||	ft_strcmp(tokens[token_index], ">>") == 0 || ft_strcmp(tokens[token_index], "<<") == 0)
-				store_redirection(&redi_list, tokens, &token_index);
+			if (ft_strcmp(pipe_segments[token_index], ">") == 0 || ft_strcmp(pipe_segments[token_index], "<") == 0
+			||	ft_strcmp(pipe_segments[token_index], ">>") == 0 || ft_strcmp(pipe_segments[token_index], "<<") == 0)
+				store_redirection(&redi_list, pipe_segments, &token_index);
 			token_index++;
 		}
-		tokens[token_index] = NULL;
+		pipe_segments[token_index] = NULL;
 		token_index++;
 		index_cmd(cmds, i)->redi_list = redi_list;
-		process_tokens(&tokens[token_index], index_cmd(cmds, i));
+		process_tokens(tokens, index_cmd(cmds, i));
 		i++;
 	}
 	free_strs(pipe_segments);
