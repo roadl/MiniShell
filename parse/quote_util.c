@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:11:04 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 17:48:45 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 19:15:33 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	process_double_quote(char **new, char *token, t_arg *arg, char *redi)
 				return (1);
 			continue ;
 		}
-		*new[arg->index_new++] = token[arg->index_old++];
+		if (*new[arg->index_new])
+			*new[arg->index_new++] = token[arg->index_old++];
 	}
 	if (token[arg->index_old] != '"')
 	{
