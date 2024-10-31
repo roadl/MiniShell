@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/31 16:12:05 by jeongbel          #+#    #+#             */
+/*   Updated: 2024/10/31 16:12:06 by jeongbel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -65,7 +77,7 @@ t_list	*parsing(char *input, int *cmd_count);
 // tokenize.c
 char	**allocate_tokens(char *input);
 void	handle_quotes(char *input, int *i, char quote);
-void    store_token(char *input, t_state *state);
+void	store_token(char *input, t_state *state);
 void	handle_special_chars(char *input, t_state *state);
 char	**tokenize_input(char *input);
 
