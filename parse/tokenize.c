@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:10:34 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 15:35:03 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:09:45 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_quotes(char *input, int *i, char quote)
 		(*i)++;
 }
 
-void	store_token(char *input, t_token_state *state)
+void	store_token(char *input, t_state *state)
 {
 	state->tokens[state->count] = (char *)malloc(state->i - state->start + 1);
 	ft_strncpy(state->tokens[state->count],
@@ -39,7 +39,7 @@ void	store_token(char *input, t_token_state *state)
 	(state->count)++;
 }
 
-void	handle_special_chars(char *input, t_token_state *state)
+void	handle_special_chars(char *input, t_state *state)
 {
 	if ((input[state->i] == '>' && input[state->i + 1] == '>')
 		|| (input[state->i] == '<' && input[state->i + 1] == '<'))
@@ -63,7 +63,7 @@ void	handle_special_chars(char *input, t_token_state *state)
 
 char	**tokenize_input(char *input)
 {
-	t_token_state	*state;
+	t_state	*state;
 
 	if (!input || is_input_error(input))
 		return (NULL);

@@ -6,13 +6,13 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 08:57:27 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 12:23:22 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:09:18 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**return_tokens(t_token_state *state)
+char	**return_tokens(t_state *state)
 {
 	char	**tokens;
 

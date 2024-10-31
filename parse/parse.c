@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 04:17:15 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 15:42:53 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 16:06:20 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ t_list	*parsing(char *input, int *cmd_count)
 	{
 		tokens_to_cmd(&t[t_index], index_cmd(cmds, i));
 		tokens_to_redi(t, index_cmd(cmds, i), &t_index);
-		printf("t_index: %d i: %d\n", t_index, i);
 		t_index++;
 		i++;
 	}

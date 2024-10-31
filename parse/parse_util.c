@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_util.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:10:45 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 13:45:07 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 16:09:08 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ int	is_redi_error(t_cmd *cmd)
 	return (0);
 }
 
-t_token_state	*init_token_state(void)
+t_state	*init_token_state(void)
 {
-	t_token_state	*state;
+	t_state	*state;
 
-	state = (t_token_state *)malloc(sizeof(t_token_state));
+	state = (t_state *)malloc(sizeof(t_state));
 	if (!state)
 		handle_systemcall_error();
 	state->tokens = NULL;
