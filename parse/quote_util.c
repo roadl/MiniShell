@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:11:04 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 19:22:16 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 19:53:44 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,15 @@ int	process_double_quote(char **new, char *token, t_arg *arg, char *redi)
 	arg->index_old++;
 	while (token[arg->index_old] && token[arg->index_old] != '"')
 	{
-		if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0
-			&& *new[arg->index_new])
+		if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0)
 		{
 			if (process_dollar(new, token, arg))
 				return (1);
 			continue ;
 		}
-		*new[arg->index_new++] = token[arg->index_old++];
+		*new = ft_stradd_with_free(*new, token[arg->index_old]);
+		arg->index_new++;
+		arg->index_old++;
 	}
 	if (token[arg->index_old] != '"')
 	{
@@ -71,4 +72,24 @@ void	init_quote_change(t_arg *arg, int *i, char *new, size_t len)
 	ft_bzero(new, len);
 	arg->index_old = 0;
 	arg->index_new = 0;
+}
+
+char	*ft_stradd_with_free(char *s1, char s2)
+{
+	char	*join;
+	size_t	i;
+
+	join = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 2));
+	if (!join)
+		handle_systemcall_error();
+	i = 0;
+	while (i < ft_strlen(s1))
+	{
+		join[i] = s1[i];
+		i++;
+	}
+	join[i] = s2;
+	join[i + 1] = '\0';
+	free(s1);
+	return (join);
 }
