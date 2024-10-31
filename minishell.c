@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:04:13 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 16:29:11 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:10:05 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	process_line(char *line, t_arg *arg)
 		ft_lstclear(&arg->cmd_list, free_cmd);
 		return ;
 	}
+	print_cmd_list(arg->cmd_list);
 	set_signal_fork();
 	g_exit_code = exec_cmds(arg);
 	ft_lstclear(&arg->cmd_list, free_cmd);
