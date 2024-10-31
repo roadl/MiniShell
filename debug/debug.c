@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:00 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:15:01 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 14:45:15 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	print_redi_list(t_list *lst)
 	while (node)
 	{
 		redi = node->content;
-		printf("[%d]: %s, %s\n", i++, redi->redi, redi->file);
+		printf("redi [%d]: %s, %s\n", i++, redi->redi, redi->file);
 		node = node->next;
 	}
 }

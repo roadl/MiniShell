@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:16 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:50:53 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 15:03:35 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void	handle_here_doc(t_cmd *cmd)
 	t_redi	*redi;
 
 	node = cmd->redi_list;
+	while (access(".temp_lock", F_OK) == 0)
+		;
+	if (open(".temp_lock", O_RDWR | O_CREAT | O_TRUNC, 0644) < 0)
+		handle_systemcall_error();
 	while (node)
 	{
 		redi = node->content;
@@ -98,6 +102,7 @@ void	handle_here_doc(t_cmd *cmd)
 		}
 		node = node->next;
 	}
+	unlink(".temp_lock");
 }
 
 int	handle_redi(t_cmd *cmd)

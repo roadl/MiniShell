@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:08 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:15:08 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 14:48:08 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ int	wait_childs(t_arg *arg, int f_pid, int l_pid)
 		arg->last_exit_code = WEXITSTATUS(statloc);
 	else
 		arg->last_exit_code = 128 + WTERMSIG(statloc);
-	wait(0);
+	while (1)
+		if (wait(0) == -1)
+			break ;
 	return (arg->last_exit_code);
 }
 
@@ -65,6 +67,24 @@ void	set_fd(t_arg *arg, t_cmd *cmd, t_list *node, int fd[2])
 		cmd->write_fd = STDOUT_FILENO;
 }
 
+static void	check_access(t_cmd *cmd)
+{
+	if (access(cmd->cmd, F_OK) != 0)
+	{
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit(127);
+	}
+	if (access(cmd->cmd, X_OK) != 0 && access(cmd->cmd, F_OK) == 0)
+	{
+		ft_putstr_fd("fastshell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+		exit(126);
+	}
+}
+
 void	check_cmd(t_cmd *cmd)
 {
 	struct stat	buf;
@@ -84,11 +104,5 @@ void	check_cmd(t_cmd *cmd)
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
-	if (access(cmd->cmd, X_OK) != 0 && access(cmd->cmd, F_OK) == 0)
-	{
-		ft_putstr_fd("fastshell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-		exit(126);
-	}
+	check_access(cmd);
 }

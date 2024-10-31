@@ -14,12 +14,14 @@ void	unlink_tmp_file(void)
 {
 	if (unlink(".temp") == -1 && errno != ENOENT)
 		perror("fastshell: ");
+	unlink(".temp_lock");
 }
 
 void	process_line(char *line, t_arg *arg)
 {
 	int	cmd_count;
 
+	unlink_tmp_file();
 	arg->cmd_list = parsing(line, &cmd_count);
 	if (!arg->cmd_list)
 	{
