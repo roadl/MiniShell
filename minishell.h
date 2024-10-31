@@ -35,6 +35,7 @@ typedef struct s_cmd
 	int		read_fd;
 	int		write_fd;
 	int		here_doc;
+	int		is_child;
 	t_list	*redi_list;
 }	t_cmd;
 
@@ -156,6 +157,7 @@ void	check_cmd(t_cmd *cmd);
 
 // redi.c
 int		handle_redi(t_cmd *cmd);
+void	handle_here_doc(t_cmd *cmd);
 
 // init.c
 int		init_arg(t_arg *arg, char **envp);

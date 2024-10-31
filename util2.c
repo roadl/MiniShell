@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util2.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/31 16:04:17 by yojin             #+#    #+#             */
+/*   Updated: 2024/10/31 16:04:20 by yojin            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
@@ -82,7 +94,7 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 
 size_t	ft_strslen(char **strs)
 {
-	size_t  i;
+	size_t	i;
 
 	i = 0;
 	while (strs[i])

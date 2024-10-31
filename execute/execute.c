@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:12 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 14:46:13 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 15:45:07 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	run_child_process(t_arg *arg, int *fd, t_list *node)
 	int		pid;
 
 	cmd = node->content;
+	cmd->is_child = 1;
 	pid = fork();
 	if (pid == -1)
 		handle_systemcall_error();

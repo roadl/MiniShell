@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 04:17:15 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 13:13:45 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 15:42:53 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_list	*allocate_cmds(int cmd_count)
 		cmd->read_fd = STDIN_FILENO;
 		cmd->write_fd = STDOUT_FILENO;
 		cmd->here_doc = 0;
+		cmd->is_child = 0;
 		cmd->redi_list = NULL;
 		ft_lstadd_back(&cmds, ft_lstnew(cmd));
 	}

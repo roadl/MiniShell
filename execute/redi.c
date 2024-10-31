@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:16 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 15:03:35 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 16:00:29 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,29 +42,6 @@ static int	open_file(char *file, int option, int type, t_cmd *cmd)
 	return (0);
 }
 
-static void	do_here_doc(t_cmd *cmd, t_redi *redi)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			ft_putstr_fd("\033[1A", STDIN_FILENO);
-			ft_putstr_fd("\033[2C", STDIN_FILENO);
-			break ;
-		}
-		if (ft_strlen(line) == 0 && ft_strlen(redi->file) == 0)
-			break ;
-		if (ft_strlen(line) != 0 && ft_strlen(line) == ft_strlen(redi->file) && \
-			ft_strncmp(line, redi->file, ft_strlen(redi->file)) == 0)
-			break ;
-		ft_putstr_fd(line, cmd->read_fd);
-		ft_putstr_fd("\n", cmd->read_fd);
-	}
-}
-
 static void	reopen_here_doc(t_cmd *cmd)
 {
 	if (cmd->here_doc)
@@ -76,42 +53,12 @@ static void	reopen_here_doc(t_cmd *cmd)
 	}
 }
 
-void	handle_here_doc(t_cmd *cmd)
-{
-	t_list	*node;
-	t_redi	*redi;
-
-	node = cmd->redi_list;
-	while (access(".temp_lock", F_OK) == 0)
-		;
-	if (open(".temp_lock", O_RDWR | O_CREAT | O_TRUNC, 0644) < 0)
-		handle_systemcall_error();
-	while (node)
-	{
-		redi = node->content;
-		if (ft_strncmp(redi->redi, "<<", 3) == 0)
-		{
-			if (!node->next)
-				cmd->here_doc = 1;
-			if (cmd->read_fd != STDIN_FILENO)
-				close(cmd->read_fd);
-			cmd->read_fd = open(".temp", O_RDWR | O_CREAT | O_TRUNC, 0644);
-			if (cmd->read_fd < 0)
-				handle_systemcall_error();
-			do_here_doc(cmd, redi);
-		}
-		node = node->next;
-	}
-	unlink(".temp_lock");
-}
-
 int	handle_redi(t_cmd *cmd)
 {
 	t_list	*node;
 	t_redi	*redi;
 	int		check;
 
-	set_signal_heredoc();
 	handle_here_doc(cmd);
 	node = cmd->redi_list;
 	while (node)
@@ -123,7 +70,7 @@ int	handle_redi(t_cmd *cmd)
 		else if (ft_strncmp(redi->redi, ">", 2) == 0)
 			check = open_file(redi->file, O_WRONLY | O_CREAT | O_TRUNC, \
 				WRITE, cmd);
-		else if (ft_strncmp(redi->redi, ">>", 2) == 0)
+		else if (ft_strncmp(redi->redi, ">>", 3) == 0)
 			check = open_file(redi->file, O_WRONLY | O_CREAT | O_APPEND, \
 				WRITE, cmd);
 		if (check == -1)
