@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:11:04 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 20:17:20 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 20:21:56 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	process_dollar(char **new, char *token, t_arg *arg)
 	next_token = token[arg->index_old + 1];
 	if (next_token == '"' || next_token == '\''
 		|| next_token == ' ' || next_token == '\t'
-			|| !next_token)
+		|| !next_token)
 	{
 		*new = ft_stradd_with_free(*new, token[arg->index_old]);
 		arg->index_new++;
