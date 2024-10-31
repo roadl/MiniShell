@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:11:04 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 06:11:06 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:48:45 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,23 @@ int	process_single_quote(char *new, char *token, t_arg *arg)
 	return (0);
 }
 
-int	process_double_quote(char *new, char *token, t_arg *arg, char *redi)
+int	process_double_quote(char **new, char *token, t_arg *arg, char *redi)
 {
 	arg->index_old++;
 	while (token[arg->index_old] && token[arg->index_old] != '"')
 	{
 		if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0)
 		{
-			if (process_dollar(&new, token, arg))
+			if (process_dollar(new, token, arg))
 				return (1);
 			continue ;
 		}
-		new[arg->index_new++] = token[arg->index_old++];
+		*new[arg->index_new++] = token[arg->index_old++];
 	}
 	if (token[arg->index_old] != '"')
 	{
 		free(token);
-		free(new);
+		free(*new);
 		print_error("fastshell", NULL, "\"", error_syntax);
 		return (1);
 	}

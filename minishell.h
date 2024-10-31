@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:12:05 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 18:54:39 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 18:55:23 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	process_quotes(t_arg *arg);
 
 // quote_util.c
 int		process_single_quote(char *new, char *token, t_arg *arg);
-int		process_double_quote(char *new, char *token, t_arg *arg, char *redi);
+int		process_double_quote(char **new, char *token, t_arg *arg, char *redi);
 int		process_dollar(char **new, char *token, t_arg *arg);
 void	init_quote_change(t_arg *arg, int *i, char *new, size_t len);
 
