@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:14:45 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:14:46 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 19:58:04 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,26 @@ int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	int		i;
 	int		status;
+	int		res;
 
 	if (!cmd->argv[1])
 		export_no_option(*env_list);
-	i = 1;
-	while (cmd->argv[i])
+	res = EXIT_SUCCESS;
+	i = 0;
+	while (cmd->argv[++i])
 	{
 		if (ft_strncmp(cmd->argv[i], "_", 2) == 0)
-		{
-			i++;
 			continue ;
-		}
 		status = check_export_arg(cmd, *env_list, i);
 		if (status == 2)
 			return (2);
 		if (status == 1)
-		{
-			i++;
 			continue ;
-		}
-		update_env(cmd->argv[i], env_list, envp);
+		if (update_env(cmd->argv[i], env_list, envp) != 0)
+			res = EXIT_FAILURE;
 		i++;
 	}
-	return (EXIT_SUCCESS);
+	return (res);
 }
 
 // option에 대해서 처리해야함
@@ -48,9 +45,11 @@ int	ft_export(t_cmd *cmd, t_list **env_list, char ***envp)
 int	ft_unset(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	int	i;
+	int	res;
 
 	if (!cmd->argv[1])
-		return (EXIT_FAILURE);
+		return (EXIT_SUCCESS);
+	res = EXIT_SUCCESS;
 	i = 1;
 	while (cmd->argv[i])
 	{
@@ -58,12 +57,13 @@ int	ft_unset(t_cmd *cmd, t_list **env_list, char ***envp)
 		{
 			print_error("unset", cmd->argv[i], \
 				"invalid option", invalid_option);
-			return (0);
+			return (2);
 		}
-		unset_env(cmd->argv[i], env_list, envp);
+		if (unset_env(cmd->argv[i], env_list, envp) != 0)
+			res = EXIT_FAILURE;
 		i++;
 	}
-	return (EXIT_SUCCESS);
+	return (res);
 }
 
 // 입력 인자 없어야 함
