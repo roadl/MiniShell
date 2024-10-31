@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:04:04 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 16:04:05 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 16:06:27 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ static void	here_doc_parent(t_cmd *cmd)
 void	handle_here_doc(t_cmd *cmd)
 {
 	cmd->here_doc = check_heredoc_last(cmd);
-	printf("is child %d\n", cmd->is_child);
 	if (!cmd->is_child)
 		here_doc_parent(cmd);
 	else

@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:14:48 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 14:21:26 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 16:12:58 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,22 @@ static int	check_exit_range(char *exit_code)
 {
 	const char	*long_min = "9223372036854775808";
 	const char	*long_max = "9223372036854775807";
+	const char	*max;
 
+	max = long_max;
 	if (exit_code[0] == '-')
 	{
 		exit_code++;
-		while (*exit_code == '0')
-			exit_code++;
-		if ((ft_strncmp(exit_code, long_min, ft_strlen(long_min)) > 0) || \
-			(ft_strlen(exit_code) > ft_strlen(long_min)))
-			return (0);
-		return (1);
+		max = long_min;
 	}
 	if (exit_code[0] == '+')
 		exit_code++;
 	while (*exit_code == '0')
 		exit_code++;
-	if ((ft_strncmp(exit_code, long_max, ft_strlen(long_max)) > 0) || \
-		(ft_strlen(exit_code) > ft_strlen(long_max)))
+	if (ft_strlen(exit_code) < ft_strlen(max))
+		return (1);
+	if ((ft_strncmp(exit_code, max, ft_strlen(max)) > 0) || \
+		(ft_strlen(exit_code) > ft_strlen(max)))
 		return (0);
 	return (1);
 }
