@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:10:34 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 09:00:01 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 15:35:03 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	**allocate_tokens(char *input)
 	char	**tokens;
 
 	tokens = (char **)malloc(sizeof(char *) * (ft_strlen(input) + 1));
+	ft_bzero(tokens, sizeof(char *) * (ft_strlen(input) + 1));
 	if (!tokens)
 		handle_systemcall_error();
 	return (tokens);
