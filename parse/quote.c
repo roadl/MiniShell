@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 05:43:07 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 06:15:15 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:03:08 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char	*replace_env_variable(char *token, t_arg *arg)
 		else
 			result = ft_strdup(env_value);
 		free(env_key);
+		free(env_value);
 	}
 	return (result);
 }
