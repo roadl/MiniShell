@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:14:48 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 16:12:58 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 17:07:52 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,29 @@ int	check_echo_option(char *str)
 		}
 	}
 	return (0);
+}
+
+char	*get_path_symbol(char *find, t_list *env_list)
+{
+	t_list	*node;
+	char	*path;
+
+	node = NULL;
+	if (!find || ft_strncmp(find, "~", 2) == 0)
+		node = find_env("HOME", env_list);
+	else
+		node = find_env("OLDPWD", env_list);
+	if (!node || !ft_strchr(node->content, '='))
+	{
+		if (!find || ft_strncmp(find, "~", 2) == 0)
+			print_error("cd", NULL, "HOME not set", error_built_in);
+		else if (ft_strncmp(find, "-", 2) == 0)
+			print_error("cd", NULL, "OLDPWD not set", error_built_in);
+		return (0);
+	}
+	if (!find || ft_strncmp(find, "~", 2) == 0)
+		path = ft_substr(node->content, 5, ft_strlen(node->content));
+	else
+		path = ft_substr(node->content, 7, ft_strlen(node->content));
+	return (path);
 }

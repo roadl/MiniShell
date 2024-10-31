@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:04:04 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 16:06:27 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 17:15:50 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,20 @@ static int	check_heredoc_last(t_cmd *cmd)
 {
 	t_list	*node;
 	t_redi	*redi;
+	int		res;
 
+	res = 0;
 	node = cmd->redi_list;
 	while (node)
 	{
 		redi = node->content;
-		if (!node->next && ft_strncmp(redi->redi, ">>", 3) == 0)
-			return (1);
+		if (ft_strncmp(redi->redi, "<<", 3) == 0)
+			res = 1;
+		else if (ft_strncmp(redi->redi, "<", 2) == 0)
+			res = 0;
 		node = node->next;
 	}
-	return (0);
+	return (res);
 }
 
 static void	do_here_doc(t_cmd *cmd, t_redi *redi)
@@ -62,9 +66,9 @@ static void	here_doc(t_cmd *cmd)
 
 	set_signal_heredoc();
 	node = cmd->redi_list;
-	while (access(".temp_lock", F_OK) == 0)
+	while (access(HEREDOC_LOCK, F_OK) == 0)
 		;
-	if (open(".temp_lock", O_RDWR | O_CREAT | O_TRUNC, 0644) < 0)
+	if (open(HEREDOC_LOCK, O_RDWR | O_CREAT | O_TRUNC, 0644) < 0)
 		handle_systemcall_error();
 	while (node)
 	{
@@ -73,14 +77,14 @@ static void	here_doc(t_cmd *cmd)
 		{
 			if (cmd->read_fd != STDIN_FILENO)
 				close(cmd->read_fd);
-			cmd->read_fd = open(".temp", O_RDWR | O_CREAT | O_TRUNC, 0644);
+			cmd->read_fd = open(HEREDOC, O_RDWR | O_CREAT | O_TRUNC, 0644);
 			if (cmd->read_fd < 0)
 				handle_systemcall_error();
 			do_here_doc(cmd, redi);
 		}
 		node = node->next;
 	}
-	unlink(".temp_lock");
+	unlink(HEREDOC_LOCK);
 }
 
 static void	here_doc_parent(t_cmd *cmd)

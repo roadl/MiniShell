@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:04:13 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 17:10:05 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:55:31 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void	set_signal_status(void)
 
 void	unlink_tmp_file(void)
 {
-	if (unlink(".temp") == -1 && errno != ENOENT)
+	if (unlink(HEREDOC) == -1 && errno != ENOENT)
 		perror("fastshell: ");
-	unlink(".temp_lock");
+	unlink(HEREDOC_LOCK);
 }
 
 void	process_line(char *line, t_arg *arg)
