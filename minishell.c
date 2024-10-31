@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/31 13:15:29 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:15:29 by yojin            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 #define READ 0
@@ -20,6 +8,12 @@ int	g_exit_code = 0;
 void	set_signal_status(void)
 {
 	g_exit_code = 1;
+}
+
+void	unlink_tmp_file(void)
+{
+	if (unlink(".temp") == -1 && errno != ENOENT)
+		perror("fastshell: ");
 }
 
 void	process_line(char *line, t_arg *arg)
@@ -43,6 +37,7 @@ void	process_line(char *line, t_arg *arg)
 	set_signal_fork();
 	g_exit_code = exec_cmds(arg);
 	ft_lstclear(&arg->cmd_list, free_cmd);
+	unlink_tmp_file();
 }
 
 // 들어올때 SHLVL 하나 증가시켜야 함
