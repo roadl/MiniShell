@@ -13,6 +13,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <termios.h>
+# include <sys/wait.h>
 # include "libft/libft.h"
 
 typedef struct s_arg
@@ -88,6 +89,7 @@ int			    count_pipe(char **input);
 int			    is_cmd_empty(t_cmd *cmd);
 int	    		is_redi_error(t_cmd *cmd);
 t_token_state	*init_token_state(void);
+char			**return_tokens(t_token_state *state);
 
 // parse_error.c
 int		check_redi_error(t_list *cmd_list);

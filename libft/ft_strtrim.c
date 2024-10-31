@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yojin <yojin@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 22:24:17 by yojin             #+#    #+#             */
-/*   Updated: 2023/11/11 15:06:38 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 08:41:23 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	back = ft_strlen(s1) - 1;
 	while (*(s1 + front) && ft_incharset(*(s1 + front), set))
 		front++;
-	while (back >= 0 && ft_incharset(*(s1 + back), set))
+	while (ft_incharset(*(s1 + back), set))
 		back--;
 	return (ft_substr(s1, front, back - front + 1));
 }

@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:10:34 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 06:10:37 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 09:00:01 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,5 @@ char	**tokenize_input(char *input)
 	if (state->i > state->start)
 		store_token(input, state);
 	state->tokens[state->count] = NULL;
-	return (state->tokens);
+	return (return_tokens(state));
 }
