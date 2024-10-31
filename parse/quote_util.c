@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:11:04 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 19:15:33 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 19:22:16 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ int	process_double_quote(char **new, char *token, t_arg *arg, char *redi)
 	arg->index_old++;
 	while (token[arg->index_old] && token[arg->index_old] != '"')
 	{
-		if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0)
+		if (token[arg->index_old] == '$' && ft_strcmp(redi, "<<") != 0
+			&& *new[arg->index_new])
 		{
 			if (process_dollar(new, token, arg))
 				return (1);
 			continue ;
 		}
-		if (*new[arg->index_new])
-			*new[arg->index_new++] = token[arg->index_old++];
+		*new[arg->index_new++] = token[arg->index_old++];
 	}
 	if (token[arg->index_old] != '"')
 	{
