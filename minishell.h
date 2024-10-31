@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:12:05 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 16:12:06 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:33:57 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int		is_redi_error(t_cmd *cmd);
 t_state	*init_token_state(void);
 char	**return_tokens(t_state *state);
 char	**rm_redi_from_tokens(char **tokens);
+int		is_blank(char *input);
 
 // parse_error.c
 int		check_cmd_error(t_list *cmd_list, int cmd_count);

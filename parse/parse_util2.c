@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 08:57:27 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 16:09:18 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:33:07 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,18 @@ char	**rm_redi_from_tokens(char **tokens)
 	}
 	new_tokens[j] = NULL;
 	return (new_tokens);
+}
+
+int	is_blank(char *input)
+{
+	char	*trim;
+
+	trim = ft_strtrim(input, " \t");
+	if (!ft_strcmp(trim, ""))
+	{
+		free(trim);
+		return (1);
+	}
+	free(trim);
+	return (0);
 }
