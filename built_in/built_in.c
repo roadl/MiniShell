@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:14:58 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 17:07:41 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 19:50:17 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int	ft_exit(t_cmd *cmd)
 	if (cmd->argv[1] && cmd->argv[2])
 	{
 		printf("exit\n");
-		ft_putstr_fd("fastshell: exit: too many arguments\n", STDOUT_FILENO);
+		ft_putstr_fd("fastshell: exit: too many arguments\n", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	printf("exit\n");
