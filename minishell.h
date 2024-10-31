@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:12:05 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 16:33:57 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:54:39 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define HEREDOC		"/tmp/.temp"
+# define HEREDOC_LOCK	"/tmp/.temp_lock"
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -125,6 +128,7 @@ int		check_exit_numeric(char *exit_code);
 int		check_echo_option(char *cmd);
 void	update_pwd(const char *key, t_list **env_list, char ***envp);
 int		check_export_arg(t_cmd *cmd, t_list *env_list, int i);
+char	*get_path_symbol(char *find, t_list *env_list);
 
 // env.c
 typedef enum e_key_type

@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:16 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 16:00:29 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 17:17:41 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	reopen_here_doc(t_cmd *cmd)
 	if (cmd->here_doc)
 	{
 		close(cmd->read_fd);
-		cmd->read_fd = open(".temp", O_RDONLY);
+		cmd->read_fd = open(HEREDOC, O_RDONLY);
 		if (cmd->read_fd < 0)
 			handle_systemcall_error();
 	}

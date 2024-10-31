@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:14:58 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:21:40 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 17:07:41 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,20 @@
 
 // cd에서 들어온 첫번째 문자열 받아서 이동할 최종 path 리턴
 // ~, -, 없을때 처리해야 함
-static char	*get_path(char *find, t_list *env_list)
+
+static char	*get_path(t_cmd *cmd, t_list **env_list)
 {
-	t_list	*node;
 	char	*path;
 
-	node = NULL;
-	if (!find || ft_strncmp(find, "~", 2) == 0)
-		node = find_env("HOME", env_list);
+	if (!cmd->argv[1] || ft_strncmp(cmd->argv[1], "-", 2) == 0 || \
+		ft_strncmp(cmd->argv[1], "~", 2) == 0)
+		path = get_path_symbol(cmd->argv[1], *env_list);
 	else
-		node = find_env("OLDPWD", env_list);
-	if (!node || !ft_strchr(node->content, '='))
 	{
-		if (!find || ft_strncmp(find, "~", 2) == 0)
-			print_error("cd", NULL, "HOME not set", error_built_in);
-		else if (ft_strncmp(find, "-", 2) == 0)
-			print_error("cd", NULL, "OLDPWD not set", error_built_in);
-		return (0);
+		path = ft_strdup(cmd->argv[1]);
+		if (!path)
+			handle_systemcall_error();
 	}
-	if (!find || ft_strncmp(find, "~", 2) == 0)
-		path = ft_substr(node->content, 5, ft_strlen(node->content));
-	else
-		path = ft_substr(node->content, 7, ft_strlen(node->content));
-	if (!path)
-		handle_systemcall_error();
 	return (path);
 }
 
@@ -100,21 +90,19 @@ int	ft_cd(t_cmd *cmd, t_list **env_list, char ***envp)
 {
 	char	*path;
 
-	if (!cmd->argv[1] || ft_strncmp(cmd->argv[1], "-", 2) == 0 || \
-		ft_strncmp(cmd->argv[1], "~", 2) == 0)
-		path = get_path(cmd->argv[1], *env_list);
-	else
-	{
-		path = ft_strdup(cmd->argv[1]);
-		if (!path)
-			handle_systemcall_error();
-	}
+	path = get_path(cmd, env_list);
 	if (!path || check_cd_path(path))
+	{
+		free(path);
 		return (EXIT_FAILURE);
+	}
 	update_pwd("OLDPWD=", env_list, envp);
 	if (chdir(path) == -1)
+	{
+		free(path);
 		return (print_error("cd", path, \
 			"No such file or directory", error_built_in));
+	}
 	update_pwd("PWD=", env_list, envp);
 	free(path);
 	return (EXIT_SUCCESS);
@@ -129,7 +117,6 @@ int	ft_exit(t_cmd *cmd)
 {
 	int	exit_code;
 
-	printf("exit_code: %s\n", cmd->cmd);
 	if (!cmd->argv[1])
 	{
 		printf("exit\n");
