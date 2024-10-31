@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 04:17:15 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 16:34:35 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:59:31 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,10 @@ t_list	*parsing(char *input, int *cmd_count)
 	int		i;
 
 	i = 0;
+	if (is_blank(input))
+		return (NULL);
 	t = tokenize_input(input);
-	if (!t || is_blank(input))
+	if (!t)
 		return (NULL);
 	t_index = 0;
 	*cmd_count = count_pipe(t) + 1;

@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 08:57:27 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 16:33:07 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:58:36 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ char	**rm_redi_from_tokens(char **tokens)
 
 int	is_blank(char *input)
 {
-	char	*trim;
+	size_t	i;
 
-	trim = ft_strtrim(input, " \t");
-	if (!ft_strcmp(trim, ""))
+	i = 0;
+	while (input[i])
 	{
-		free(trim);
-		return (1);
+		if (input[i] != ' ' && input[i] != '\t')
+			return (0);
+		i++;
 	}
-	free(trim);
-	return (0);
+	return (1);
 }
