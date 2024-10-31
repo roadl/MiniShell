@@ -58,7 +58,7 @@ void	set_signal_status(void);
 // parse.c
 t_list	*allocate_cmds(int cmd_count);
 void	store_redirection(t_list **redi_list, char **tokens, int *token_index);
-void	process_tokens(char **tokens, t_cmd *cmd);
+void	tokens_to_cmd(char **tokens, t_cmd *cmd);
 char	**rm_redi_from_tokens(char **tokens);
 t_list	*parsing(char *input, int *cmd_count);
 

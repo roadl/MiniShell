@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 04:17:15 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 06:29:13 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 09:32:40 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	store_redirection(t_list **redi_list, char **tokens, int *token_index)
 	ft_lstadd_back(redi_list, ft_lstnew(redi));
 }
 
-void	process_tokens(char **tokens, t_cmd *cmd)
+void	tokens_to_cmd(char **tokens, t_cmd *cmd)
 {
 	int		argc;
 	int		i;
@@ -112,37 +112,35 @@ char	**rm_redi_from_tokens(char **tokens)
 
 t_list	*parsing(char *input, int *cmd_count)
 {
-	char	**seg;
+	char	**t;
 	t_list	*cmds;
-	char	**tokens;
 	t_list	*redi_list;
-	int		token_index;
+	size_t	t_index;
 	int		i;
 
 	i = 0;
-	seg = tokenize_input(input);
-	if (!seg)
+	t = tokenize_input(input);
+	if (!t)
 		return (NULL);
-	token_index = 0;
-	*cmd_count = count_pipe(seg) + 1;
+	t_index = 0;
+	*cmd_count = count_pipe(t) + 1;
 	cmds = allocate_cmds(*cmd_count);
-	while (seg[token_index])
+	while (t[t_index])
 	{
-		tokens = &seg[token_index];
+		tokens_to_cmd(&t[t_index], index_cmd(cmds, i));
 		redi_list = NULL;
-		while (ft_strcmp(seg[token_index], "|") && seg[token_index])
+		while (ft_strcmp(t[t_index], "|") && t[t_index])
 		{
-			if (!ft_strcmp(seg[token_index], ">") || !ft_strcmp(seg[token_index], "<")
-				|| !ft_strcmp(seg[token_index], ">>") || !ft_strcmp(seg[token_index], "<<"))
-				store_redirection(&redi_list, seg, &token_index);
-			token_index++;
+			if (!ft_strcmp(t[t_index], ">") || !ft_strcmp(t[t_index], "<")
+				|| !ft_strcmp(t[t_index], ">>") || !ft_strcmp(t[t_index], "<<"))
+				store_redirection(&redi_list, t, &t_index);
+			t_index++;
 		}
-		token_index++;
 		index_cmd(cmds, i)->redi_list = redi_list;
-		process_tokens(tokens, index_cmd(cmds, i));
+		t_index++;
 		i++;
 	}
-	free_strs(seg);
+	free_strs(t);
 	if (*cmd_count != 1 && is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
 	{
 		ft_lstclear(&cmds, free_cmd);
