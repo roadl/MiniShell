@@ -6,7 +6,7 @@
 /*   By: yojin <yojin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:15:16 by yojin             #+#    #+#             */
-/*   Updated: 2024/10/31 13:15:16 by yojin            ###   ########.fr       */
+/*   Updated: 2024/10/31 13:50:53 by yojin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void	handle_here_doc(t_cmd *cmd)
 		redi = node->content;
 		if (ft_strncmp(redi->redi, "<<", 3) == 0)
 		{
-			cmd->here_doc = 1;
+			if (!node->next)
+				cmd->here_doc = 1;
 			if (cmd->read_fd != STDIN_FILENO)
 				close(cmd->read_fd);
 			cmd->read_fd = open(".temp", O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -97,7 +98,6 @@ void	handle_here_doc(t_cmd *cmd)
 		}
 		node = node->next;
 	}
-	reopen_here_doc(cmd);
 }
 
 int	handle_redi(t_cmd *cmd)
@@ -125,5 +125,6 @@ int	handle_redi(t_cmd *cmd)
 			return (-1);
 		node = node->next;
 	}
+	reopen_here_doc(cmd);
 	return (0);
 }
