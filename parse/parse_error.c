@@ -6,11 +6,22 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 06:10:49 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 06:47:38 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:23:42 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	check_cmd_error(t_list *cmd_list, int cmd_count)
+{
+	if (cmd_count != 0 && is_cmd_empty(index_cmd(cmd_list, cmd_count - 1)))
+	{
+		print_error("fastshell", NULL, "|", error_syntax);
+		ft_lstclear(&cmd_list, free_cmd);
+		return (1);
+	}
+	return (0);
+}
 
 int	check_redi_error(t_list *cmd_list)
 {
@@ -22,7 +33,10 @@ int	check_redi_error(t_list *cmd_list)
 	{
 		cmd = node->content;
 		if (is_redi_error(cmd))
+		{
+			ft_lstclear(&cmd_list, free_cmd);
 			return (1);
+		}
 		node = node->next;
 	}
 	return (0);

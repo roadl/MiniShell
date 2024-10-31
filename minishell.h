@@ -59,7 +59,6 @@ void	set_signal_status(void);
 t_list	*allocate_cmds(int cmd_count);
 void	store_redirection(t_list **redi_list, char **tokens, int *token_index);
 void	tokens_to_cmd(char **tokens, t_cmd *cmd);
-char	**rm_redi_from_tokens(char **tokens);
 t_list	*parsing(char *input, int *cmd_count);
 
 // tokenize.c
@@ -90,8 +89,10 @@ int			    is_cmd_empty(t_cmd *cmd);
 int	    		is_redi_error(t_cmd *cmd);
 t_token_state	*init_token_state(void);
 char			**return_tokens(t_token_state *state);
+char			**rm_redi_from_tokens(char **tokens);
 
 // parse_error.c
+int		check_cmd_error(t_list *cmd_list, int cmd_count);
 int		check_redi_error(t_list *cmd_list);
 int		is_input_error(char *input);
 

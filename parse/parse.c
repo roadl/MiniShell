@@ -6,7 +6,7 @@
 /*   By: jeongbel <jeongbel@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 04:17:15 by jeongbel          #+#    #+#             */
-/*   Updated: 2024/10/31 09:32:40 by jeongbel         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:17:43 by jeongbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ void	tokens_to_cmd(char **tokens, t_cmd *cmd)
 	if (!tokens || !(*tokens))
 		return ;
 	cmd_tokens = rm_redi_from_tokens(tokens);
-	argc = 0;
-	while (cmd_tokens[argc])
-		argc++;
+	argc = ft_strslen(cmd_tokens);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	if (!cmd->argv)
 		handle_systemcall_error();
@@ -81,41 +79,26 @@ void	tokens_to_cmd(char **tokens, t_cmd *cmd)
 	free_strs(cmd_tokens);
 }
 
-char	**rm_redi_from_tokens(char **tokens)
+void	tokens_to_redi(char **tokens, t_cmd *cmd, int *i)
 {
-	char	**new_tokens;
-	int		i;
-	int		j;
+	t_list	*redi_list;
 
-	new_tokens = (char **)malloc(sizeof(char *) * (ft_strslen(tokens) + 1));
-	if (!new_tokens)
-		handle_systemcall_error();
-	i = 0;
-	j = 0;
-	while (tokens[i] && ft_strcmp(tokens[i], "|"))
+	redi_list = NULL;
+	while (tokens[*i] && ft_strcmp(tokens[*i], "|"))
 	{
-		if (!ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>")
-			|| !ft_strcmp(tokens[i], "<") || !ft_strcmp(tokens[i], "<<"))
-		{
-			i += 2;
-			continue ;
-		}
-		new_tokens[j] = ft_strdup(tokens[i]);
-		if (!new_tokens[j])
-			handle_systemcall_error();
-		i++;
-		j++;
+		if (!ft_strcmp(tokens[*i], ">") || !ft_strcmp(tokens[*i], "<")
+			|| !ft_strcmp(tokens[*i], ">>") || !ft_strcmp(tokens[*i], "<<"))
+			store_redirection(&redi_list, tokens, i);
+		(*i)++;
 	}
-	new_tokens[j] = NULL;
-	return (new_tokens);
+	cmd->redi_list = redi_list;
 }
 
 t_list	*parsing(char *input, int *cmd_count)
 {
-	char	**t;
 	t_list	*cmds;
-	t_list	*redi_list;
-	size_t	t_index;
+	char	**t;
+	int		t_index;
 	int		i;
 
 	i = 0;
@@ -128,29 +111,13 @@ t_list	*parsing(char *input, int *cmd_count)
 	while (t[t_index])
 	{
 		tokens_to_cmd(&t[t_index], index_cmd(cmds, i));
-		redi_list = NULL;
-		while (ft_strcmp(t[t_index], "|") && t[t_index])
-		{
-			if (!ft_strcmp(t[t_index], ">") || !ft_strcmp(t[t_index], "<")
-				|| !ft_strcmp(t[t_index], ">>") || !ft_strcmp(t[t_index], "<<"))
-				store_redirection(&redi_list, t, &t_index);
-			t_index++;
-		}
-		index_cmd(cmds, i)->redi_list = redi_list;
+		tokens_to_redi(&t[t_index], index_cmd(cmds, i), &t_index);
+		printf("t_index: %d i: %d\n", t_index, i);
 		t_index++;
 		i++;
 	}
 	free_strs(t);
-	if (*cmd_count != 1 && is_cmd_empty(index_cmd(cmds, *cmd_count - 1)))
-	{
-		ft_lstclear(&cmds, free_cmd);
-		print_error("fastshell", NULL, "|", error_syntax);
+	if (check_cmd_error(cmds, *cmd_count) || check_redi_error(cmds))
 		return (NULL);
-	}
-	if (check_redi_error(cmds))
-	{
-		ft_lstclear(&cmds, free_cmd);
-		return (NULL);
-	}
 	return (cmds);
 }
