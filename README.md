@@ -5,8 +5,8 @@
 
 Bash의 핵심 기능을 구현하고 프로세스 생명 주기, 파이프라인 데이터 흐름, 시그널을 관리합니다.
 
-[Minishell Image1](images/minishell1.png)
-[Minishell Image2](images/minishell2.png)
+![Minishell Image1](images/minishell1.png)
+![Minishell Image2](images/minishell2.png)
 
 ## Features
 - Process Management
