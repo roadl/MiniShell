@@ -38,6 +38,6 @@ make
 - Build Tool: make
 
 ## Team Members
-[roadl](github.com/roadl)
+[roadl](https://github.com/roadl)
 
-[coffeesigma](github.con/coffeesigma)
+[coffeesigma](https://github.con/coffeesigma)
