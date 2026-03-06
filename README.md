@@ -40,4 +40,4 @@ make
 ## Team Members
 [roadl](https://github.com/roadl)
 
-[coffeesigma](https://github.con/coffeesigma)
+[coffeesigma](https://github.com/coffeesigma)
